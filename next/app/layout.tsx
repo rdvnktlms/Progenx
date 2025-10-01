@@ -19,7 +19,8 @@ export default function RootLayout({ children }: { children: ReactNode }) {
             </a>
             <nav className="nav">
               <a href="/">Ana Sayfa</a>
-              <a href="/kitaplar">Kitaplar</a>
+              <a href="/kullanici">Kullanıcı</a>
+              <a href="/kitaplarim">Kitaplarım</a>
             </nav>
           </header>
           {children}

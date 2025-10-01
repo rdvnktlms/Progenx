@@ -1,87 +1,122 @@
 export default function Page(){
+  const books = [
+    {
+      id: 1,
+      title: "Benim Küçük Deneylerim, Nasıl Ya...",
+      author: "Melanie PEREZ",
+      cover: "/img/benim-kucuk-deneylerim-mekanik...-5-4bcd.jpg",
+      originalPrice: "₺200,00",
+      currentPrice: "₺160,00",
+      discount: "20%",
+      link: "/kitaplar/benim-kucuk-deneylerim"
+    },
+    {
+      id: 2,
+      title: "Benim Küçük Deneylerim, Mutfak",
+      author: "Francesca MASSA",
+      cover: "/img/benim-kucuk-deneylerim-mekanik...-5-4bcd.jpg",
+      originalPrice: "₺195,00",
+      currentPrice: "₺156,00",
+      discount: "20%",
+      link: "/kitaplar/benim-kucuk-deneylerim"
+    },
+    {
+      id: 3,
+      title: "Benim Küçük Deneylerim, Yaratıcı ...",
+      author: "Vincent HUBERT",
+      cover: "/img/benim-kucuk-deneylerim-mekanik...-5-4bcd.jpg",
+      originalPrice: "₺195,00",
+      currentPrice: "₺156,00",
+      discount: "20%",
+      link: "/kitaplar/benim-kucuk-deneylerim"
+    },
+    {
+      id: 4,
+      title: "Benim Küçük Deneylerim, Sürdür...",
+      author: "Melanie PEREZ",
+      cover: "/img/benim-kucuk-deneylerim-mekanik...-5-4bcd.jpg",
+      originalPrice: "₺195,00",
+      currentPrice: "₺156,00",
+      discount: "20%",
+      link: "/kitaplar/benim-kucuk-deneylerim"
+    },
+    {
+      id: 5,
+      title: "Benim Küçük Deneylerim, Su ve Işık",
+      author: "Melanie PEREZ",
+      cover: "/img/benim-kucuk-deneylerim-mekanik...-5-4bcd.jpg",
+      originalPrice: "₺195,00",
+      currentPrice: "₺156,00",
+      discount: "20%",
+      link: "/kitaplar/benim-kucuk-deneylerim"
+    },
+    {
+      id: 6,
+      title: "Benim Küçük Deneylerim, PLASTİK SANATLAR",
+      author: "Vincent HUBERT",
+      cover: "/img/benim-kucuk-deneylerim-mekanik...-5-4bcd.jpg",
+      originalPrice: "₺195,00",
+      currentPrice: "₺156,00",
+      discount: "20%",
+      link: "/kitaplar/benim-kucuk-deneylerim"
+    },
+    {
+      id: 7,
+      title: "Benim Küçük Deneylerim, Mekanik",
+      author: "Melanie PEREZ",
+      cover: "/img/benim-kucuk-deneylerim-mekanik...-5-4bcd.jpg",
+      originalPrice: "₺195,00",
+      currentPrice: "₺156,00",
+      discount: "20%",
+      link: "/kitaplar/benim-kucuk-deneylerim"
+    },
+    {
+      id: 8,
+      title: "Benim Küçük Deneylerim, Bahçıvanlık",
+      author: "Francesca MASSA",
+      cover: "/img/benim-kucuk-deneylerim-mekanik...-5-4bcd.jpg",
+      originalPrice: "₺195,00",
+      currentPrice: "₺156,00",
+      discount: "20%",
+      link: "/kitaplar/benim-kucuk-deneylerim"
+    }
+  ];
+
   return (
     <>
-      <section className="hero">
-        <h2>Kitaptan oyuna, oyundan öğrenmeye</h2>
-        <p>Seçtiğin kitabın içinden mini oyunlara geç.</p>
-      </section>
-      
-      <section className="featured-book">
-        <div className="book-cover">
-          <img src="/img/oyunlarla-satranc-4228-9.webp" alt="Oyunlarla Satranç - Ozan ÇAPAN" className="book-image" />
-          <div className="book-badge">Yeni!</div>
-        </div>
-        <div className="book-info">
-          <h3>Oyunlarla Satranç</h3>
-          <p className="author">Ozan ÇAPAN</p>
-          <p className="description">Satranç taşlarını eğlenceli karakterler olarak tanıyın! Koyunlar ve Kurt senaryolarıyla strateji geliştirin.</p>
-          <div className="book-features">
-            <span className="feature">🎮 İnteraktif Oyunlar</span>
-            <span className="feature">📚 Eğitici İçerik</span>
-            <span className="feature">👶 Çocuk Dostu</span>
-          </div>
-          <a className="cta primary" href="/kitaplar/satranc">Kitabı İncele</a>
-          <a className="cta secondary" href="/oyunlar/hirsiz-polis">Hırsız & Polis <span className="page-number">Sayfa 49</span></a>
-          <a className="cta secondary" href="/oyunlar/kurt-vs-koyunlar">Kurt vs Koyunlar <span className="page-number">Sayfa 59</span></a>
+      <section className="hero-section">
+        <div className="hero-content">
+          <h1>İnteraktif Çocuk Kitapları</h1>
+          <p>Eğlenceli oyunlar ve deneylerle öğrenmeyi keşfedin!</p>
         </div>
       </section>
 
-      <section className="featured-book">
-        <div className="book-cover">
-          <img src="/img/hava-4a9c-b724-.jpg" alt="Hava Olayları - Doğa Bilimci" className="book-image" />
-          <div className="book-badge">Yeni!</div>
+      <section className="books-section">
+        <div className="section-header">
+          <h2>Popüler Kitaplar</h2>
+          <p>Çocuklarınız için özenle seçilmiş eğitici kitaplar</p>
         </div>
-        <div className="book-info">
-          <h3>Hava Olayları</h3>
-          <p className="author">Doğa Bilimci</p>
-          <p className="description">Havanın sırlarını keşfet! Yağmur, rüzgar, gökkuşağı ve fırtına oluşumunu eğlenceli oyunlarla öğren.</p>
-          <div className="book-features">
-            <span className="feature">🌧️ İnteraktif Oyunlar</span>
-            <span className="feature">🔬 Bilimsel Bilgiler</span>
-            <span className="feature">👶 Çocuk Dostu</span>
-          </div>
-          <a className="cta primary" href="/kitaplar/hava-olaylari">Kitabı İncele</a>
-          <a className="cta secondary" href="/oyunlar/ruzgar-yonu">Rüzgar Yönü <span className="page-number">Sayfa 8</span></a>
-          <a className="cta secondary" href="/oyunlar/yagmur-bulutu">Yağmur Bulutu <span className="page-number">Sayfa 14</span></a>
-          <a className="cta secondary" href="/oyunlar/gokkusagi-renkleri">Gökkuşağı <span className="page-number">Sayfa 18</span></a>
-          <a className="cta secondary" href="/oyunlar/firtina-simulatoru">Fırtına Simülatörü <span className="page-number">Sayfa 24</span></a>
-          <a className="cta secondary" href="/oyunlar/sicaklik-termometresi">Termometre <span className="page-number">Sayfa 36</span></a>
-        </div>
-      </section>
-
-      <section className="other-books">
-        <h3>Diğer Kitaplar</h3>
-        <div className="card-grid">
-          <article className="card">
-            <img src="/img/atalarımızdan dersler.jpg" alt="Atalarımızdan Dersler" style={{width: '100%', height: '150px', objectFit: 'cover', borderRadius: '8px', marginBottom: '1rem'}} />
-            <h4>Atalarımızdan Dersler</h4>
-            <p>Arkeolojik kalıntılarla tarihi uygarlıkları keşfet!</p>
-            <div className="card-actions">
-              <a href="/kitaplar/atalarimizdan-dersler" className="cta">Kitabı İncele</a>
+        
+        <div className="books-grid">
+          {books.map(book => (
+            <div key={book.id} className="book-card">
+              <div className="book-cover">
+                <img src={book.cover} alt={book.title} />
+                <div className="discount-badge">{book.discount}</div>
+              </div>
+              <div className="book-info">
+                <h3 className="book-title">{book.title}</h3>
+                <p className="book-author">{book.author}</p>
+                <div className="price-info">
+                  <span className="current-price">{book.currentPrice}</span>
+                  <span className="original-price">{book.originalPrice}</span>
+                </div>
+                <button className="buy-button">
+                  Satın Al
+                </button>
+              </div>
             </div>
-          </article>
-          <article className="card">
-            <img src="/img/benim-kucuk-deneylerim-mekanik...-5-4bcd.jpg" alt="Benim Küçük Deneylerim" style={{width: '100%', height: '150px', objectFit: 'cover', borderRadius: '8px', marginBottom: '1rem'}} />
-            <h4>Benim Küçük Deneylerim</h4>
-            <p>Mekanik prensipleri eğlenceli deneylerle öğren!</p>
-            <a href="/kitaplar/benim-kucuk-deneylerim" className="cta">Kitabı İncele</a>
-          </article>
-          <article className="card">
-            <img src="/img/tatil kitabı.jpg" alt="Tatilde 50 Macera" style={{width: '100%', height: '150px', objectFit: 'cover', borderRadius: '8px', marginBottom: '1rem'}} />
-            <h4>Tatilde 50 Macera</h4>
-            <p>13 yaşına gelmeden yaşanacak tatil maceraları!</p>
-            <a href="/kitaplar/tatilde-50-macera" className="cta">Kitabı İncele</a>
-          </article>
-          <article className="card coming-soon">
-            <h4>Renklerle Matematik</h4>
-            <p>Renkli oyunlarla sayılar ve işlemler.</p>
-            <span className="coming-badge">Yakında</span>
-          </article>
-          <article className="card coming-soon">
-            <h4>Masal Labirenti</h4>
-            <p>Masal kahramanını güvenle çıkışa ulaştır.</p>
-            <span className="coming-badge">Yakında</span>
-          </article>
+          ))}
         </div>
       </section>
     </>
