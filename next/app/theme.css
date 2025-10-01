@@ -3017,12 +3017,33 @@ body{margin:0;font-family:ui-sans-serif,system-ui,-apple-system,Segoe UI,Roboto,
   color: #495057;
 }
 
-.distance-input input {
-  width: 100%;
+.distance-input-row {
+  display: flex;
+  gap: 0.5rem;
+  align-items: center;
+}
+
+.distance-input-field {
+  flex: 1;
   padding: 0.5rem;
   border: 1px solid #ced4da;
   border-radius: 4px;
   font-size: 0.9rem;
+}
+
+.clear-distance-btn {
+  padding: 0.5rem;
+  border: 1px solid #ced4da;
+  border-radius: 4px;
+  background: white;
+  cursor: pointer;
+  font-size: 0.9rem;
+  transition: all 0.2s ease;
+}
+
+.clear-distance-btn:hover {
+  background: #f8f9fa;
+  border-color: #adb5bd;
 }
 
 .distance-input small {

@@ -95,19 +95,19 @@ export default function TatilHaritasiOyunu() {
       if (item.id === itemId && !item.visited) {
         // Manuel mesafe girişi varsa onu kullan, yoksa otomatik hesapla
         let steps = 0;
-        if (customDistance && !isNaN(Number(customDistance)) && Number(customDistance) > 0) {
+        if (customDistance && customDistance.trim() !== '' && !isNaN(Number(customDistance)) && Number(customDistance) > 0) {
           steps = Number(customDistance);
+          console.log('Manuel mesafe kullanıldı:', steps);
         } else {
           // Mesafeyi hesapla (basit mesafe hesabı)
           const distance = Math.sqrt(Math.pow(item.x - player.x, 2) + Math.pow(item.y - player.y, 2));
           steps = Math.round(distance / 10);
+          console.log('Otomatik mesafe hesaplandı:', steps);
         }
         
-        // Oyuncuyu yeni konuma taşı
+        // Sadece adım sayısını artır, çocuk başlangıç konumunda kalsın
         setPlayer(prev => ({
           ...prev,
-          x: item.x,
-          y: item.y,
           totalSteps: prev.totalSteps + steps,
           visitedPlaces: [...prev.visitedPlaces, item.label]
         }));
@@ -312,14 +312,24 @@ export default function TatilHaritasiOyunu() {
           
           <div className="distance-input">
             <label>👣 Mesafe Girişi (Adım):</label>
-            <input 
-              type="number" 
-              value={customDistance}
-              onChange={(e) => setCustomDistance(e.target.value)}
-              placeholder="Boş bırak otomatik hesapla"
-              min="0"
-            />
-            <small>Boş bırakırsan otomatik hesaplanır</small>
+            <div className="distance-input-row">
+              <input 
+                type="number" 
+                value={customDistance}
+                onChange={(e) => setCustomDistance(e.target.value)}
+                placeholder="Boş bırak otomatik hesapla"
+                min="0"
+                className="distance-input-field"
+              />
+              <button 
+                className="clear-distance-btn"
+                onClick={() => setCustomDistance('')}
+                title="Mesafe girişini temizle"
+              >
+                🗑️
+              </button>
+            </div>
+            <small>Boş bırakırsan otomatik hesaplanır. Şu an: {customDistance ? `${customDistance} adım` : 'Otomatik'}</small>
           </div>
           
           <div className="visited-places">
