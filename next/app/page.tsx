@@ -2,28 +2,28 @@ export default function Page(){
   const books = [
     {
       id: 1,
-      title: "Benim Küçük Deneylerim, Nasıl Ya...",
-      author: "Melanie PEREZ",
-      cover: "/img/benim-kucuk-deneylerim-mekanik...-5-4bcd.jpg",
+      title: "Oyunlarla Satranç",
+      author: "Ozan ÇAPAN",
+      cover: "/img/oyunlarla-satranc-4228-9.webp",
       originalPrice: "₺200,00",
       currentPrice: "₺160,00",
       discount: "20%",
-      link: "/kitaplar/benim-kucuk-deneylerim"
+      link: "/kitaplar/satranc"
     },
     {
       id: 2,
-      title: "Benim Küçük Deneylerim, Mutfak",
-      author: "Francesca MASSA",
-      cover: "/img/benim-kucuk-deneylerim-mekanik...-5-4bcd.jpg",
+      title: "Hava Olayları",
+      author: "Doğa Bilimci",
+      cover: "/img/hava-4a9c-b724-.jpg",
       originalPrice: "₺195,00",
       currentPrice: "₺156,00",
       discount: "20%",
-      link: "/kitaplar/benim-kucuk-deneylerim"
+      link: "/kitaplar/hava-olaylari"
     },
     {
       id: 3,
-      title: "Benim Küçük Deneylerim, Yaratıcı ...",
-      author: "Vincent HUBERT",
+      title: "Benim Küçük Deneylerim",
+      author: "Bilim Öğretmeni",
       cover: "/img/benim-kucuk-deneylerim-mekanik...-5-4bcd.jpg",
       originalPrice: "₺195,00",
       currentPrice: "₺156,00",
@@ -32,53 +32,56 @@ export default function Page(){
     },
     {
       id: 4,
-      title: "Benim Küçük Deneylerim, Sürdür...",
-      author: "Melanie PEREZ",
-      cover: "/img/benim-kucuk-deneylerim-mekanik...-5-4bcd.jpg",
+      title: "Atalarımızdan Dersler",
+      author: "Tarih Uzmanı",
+      cover: "/img/atalarımızdan dersler.jpg",
       originalPrice: "₺195,00",
       currentPrice: "₺156,00",
       discount: "20%",
-      link: "/kitaplar/benim-kucuk-deneylerim"
+      link: "/kitaplar/atalarimizdan-dersler"
     },
     {
       id: 5,
-      title: "Benim Küçük Deneylerim, Su ve Işık",
-      author: "Melanie PEREZ",
-      cover: "/img/benim-kucuk-deneylerim-mekanik...-5-4bcd.jpg",
+      title: "Tatilde 50 Macera",
+      author: "Macera Uzmanı",
+      cover: "/img/tatil kitabı.jpg",
       originalPrice: "₺195,00",
       currentPrice: "₺156,00",
       discount: "20%",
-      link: "/kitaplar/benim-kucuk-deneylerim"
+      link: "/kitaplar/tatilde-50-macera"
     },
     {
       id: 6,
-      title: "Benim Küçük Deneylerim, PLASTİK SANATLAR",
-      author: "Vincent HUBERT",
+      title: "Renklerle Matematik",
+      author: "Matematik Öğretmeni",
       cover: "/img/benim-kucuk-deneylerim-mekanik...-5-4bcd.jpg",
       originalPrice: "₺195,00",
       currentPrice: "₺156,00",
       discount: "20%",
-      link: "/kitaplar/benim-kucuk-deneylerim"
+      link: "/kitaplar/renklerle-matematik",
+      comingSoon: true
     },
     {
       id: 7,
-      title: "Benim Küçük Deneylerim, Mekanik",
-      author: "Melanie PEREZ",
+      title: "Masal Labirenti",
+      author: "Masal Uzmanı",
       cover: "/img/benim-kucuk-deneylerim-mekanik...-5-4bcd.jpg",
       originalPrice: "₺195,00",
       currentPrice: "₺156,00",
       discount: "20%",
-      link: "/kitaplar/benim-kucuk-deneylerim"
+      link: "/kitaplar/masal-labirenti",
+      comingSoon: true
     },
     {
       id: 8,
-      title: "Benim Küçük Deneylerim, Bahçıvanlık",
-      author: "Francesca MASSA",
+      title: "Bilim Maceraları",
+      author: "Bilim Uzmanı",
       cover: "/img/benim-kucuk-deneylerim-mekanik...-5-4bcd.jpg",
       originalPrice: "₺195,00",
       currentPrice: "₺156,00",
       discount: "20%",
-      link: "/kitaplar/benim-kucuk-deneylerim"
+      link: "/kitaplar/bilim-maceralari",
+      comingSoon: true
     }
   ];
 
@@ -99,20 +102,29 @@ export default function Page(){
         
         <div className="books-grid">
           {books.map(book => (
-            <div key={book.id} className="book-card">
+            <div key={book.id} className={`book-card ${book.comingSoon ? 'coming-soon' : ''}`}>
               <div className="book-cover">
                 <img src={book.cover} alt={book.title} />
-                <div className="discount-badge">{book.discount}</div>
+                {book.comingSoon ? (
+                  <div className="coming-badge">Yakında</div>
+                ) : (
+                  <div className="discount-badge">{book.discount}</div>
+                )}
               </div>
               <div className="book-info">
                 <h3 className="book-title">{book.title}</h3>
                 <p className="book-author">{book.author}</p>
-                <div className="price-info">
-                  <span className="current-price">{book.currentPrice}</span>
-                  <span className="original-price">{book.originalPrice}</span>
-                </div>
-                <button className="buy-button">
-                  Satın Al
+                {!book.comingSoon && (
+                  <div className="price-info">
+                    <span className="current-price">{book.currentPrice}</span>
+                    <span className="original-price">{book.originalPrice}</span>
+                  </div>
+                )}
+                <button 
+                  className={`buy-button ${book.comingSoon ? 'coming-soon-btn' : ''}`}
+                  disabled={book.comingSoon}
+                >
+                  {book.comingSoon ? 'Yakında' : 'Satın Al'}
                 </button>
               </div>
             </div>
