@@ -2935,3 +2935,359 @@ body{margin:0;font-family:ui-sans-serif,system-ui,-apple-system,Segoe UI,Roboto,
   }
 }
 
+/* Yeni Harita Oyunu Styles */
+.map-creation-section {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 2rem;
+  margin: 2rem 0;
+}
+
+.player-stats {
+  background: #f8f9fa;
+  padding: 1.5rem;
+  border-radius: 12px;
+  border: 2px solid #e9ecef;
+}
+
+.player-stats h3 {
+  margin-bottom: 1rem;
+  color: #495057;
+}
+
+.stats-grid {
+  display: grid;
+  gap: 0.75rem;
+  margin-bottom: 1rem;
+}
+
+.stat-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.5rem;
+  background: white;
+  border-radius: 6px;
+  border: 1px solid #dee2e6;
+}
+
+.stat-label {
+  font-weight: 500;
+  color: #495057;
+}
+
+.stat-value {
+  font-weight: 600;
+  color: #007bff;
+}
+
+.visited-places {
+  margin-top: 1rem;
+  padding-top: 1rem;
+  border-top: 1px solid #dee2e6;
+}
+
+.places-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-top: 0.5rem;
+}
+
+.visited-place {
+  background: #d4edda;
+  color: #155724;
+  padding: 0.25rem 0.5rem;
+  border-radius: 4px;
+  font-size: 0.8rem;
+}
+
+.map-tools {
+  background: #f8f9fa;
+  padding: 1.5rem;
+  border-radius: 12px;
+  border: 2px solid #e9ecef;
+}
+
+.map-tools h3 {
+  margin-bottom: 1rem;
+  color: #495057;
+}
+
+.tool-selection {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
+  gap: 0.5rem;
+}
+
+.tool-btn {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 0.75rem;
+  border: 2px solid #dee2e6;
+  border-radius: 8px;
+  background: white;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.tool-btn:hover {
+  border-color: #007bff;
+  transform: translateY(-2px);
+}
+
+.tool-btn.selected {
+  border-color: #007bff;
+  background: #e3f2fd;
+}
+
+.tool-icon {
+  font-size: 1.2rem;
+  margin-bottom: 0.25rem;
+}
+
+.tool-label {
+  font-size: 0.7rem;
+  font-weight: 500;
+  color: #495057;
+  text-align: center;
+}
+
+.map-canvas-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.map-canvas-container h3 {
+  margin-bottom: 1rem;
+  color: #495057;
+}
+
+.map-canvas {
+  border: 2px solid #333;
+  border-radius: 8px;
+  background: #f8f9fa;
+}
+
+.canvas-instruction {
+  margin-top: 0.5rem;
+  font-size: 0.9rem;
+  color: #6c757d;
+  text-align: center;
+}
+
+.places-list-container {
+  grid-column: 1 / -1;
+  background: #f8f9fa;
+  padding: 1.5rem;
+  border-radius: 12px;
+  border: 2px solid #e9ecef;
+}
+
+.places-list-container h3 {
+  margin-bottom: 1rem;
+  color: #495057;
+}
+
+.places-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 1rem;
+}
+
+.place-card {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 1rem;
+  background: white;
+  border-radius: 8px;
+  border: 2px solid #dee2e6;
+  transition: all 0.3s ease;
+}
+
+.place-card.visited {
+  border-color: #28a745;
+  background: #f8fff9;
+}
+
+.place-icon {
+  font-size: 2rem;
+}
+
+.place-info {
+  flex: 1;
+}
+
+.place-info h4 {
+  margin: 0 0 0.25rem 0;
+  color: #495057;
+}
+
+.place-info p {
+  margin: 0;
+  font-size: 0.8rem;
+  color: #6c757d;
+}
+
+.distance-info {
+  color: #28a745 !important;
+  font-weight: 500;
+}
+
+.visit-btn {
+  padding: 0.5rem 1rem;
+  border: none;
+  border-radius: 6px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.visit-btn:not(.visited) {
+  background: #007bff;
+  color: white;
+}
+
+.visit-btn:not(.visited):hover {
+  background: #0056b3;
+}
+
+.visit-btn.visited {
+  background: #28a745;
+  color: white;
+  cursor: not-allowed;
+}
+
+.diary-section {
+  grid-column: 1 / -1;
+  background: #fff3cd;
+  padding: 2rem;
+  border-radius: 12px;
+  border: 2px solid #ffeaa7;
+  margin-top: 2rem;
+}
+
+.diary-section h3 {
+  margin-bottom: 1.5rem;
+  color: #856404;
+}
+
+.diary-form {
+  background: white;
+  padding: 1.5rem;
+  border-radius: 8px;
+  margin-bottom: 2rem;
+}
+
+.form-group {
+  margin-bottom: 1rem;
+}
+
+.form-group label {
+  display: block;
+  margin-bottom: 0.5rem;
+  font-weight: 500;
+  color: #495057;
+}
+
+.form-group textarea {
+  width: 100%;
+  padding: 0.75rem;
+  border: 1px solid #ced4da;
+  border-radius: 6px;
+  font-family: inherit;
+  resize: vertical;
+}
+
+.add-entry-btn {
+  padding: 0.75rem 1.5rem;
+  background: #ffc107;
+  color: #212529;
+  border: none;
+  border-radius: 6px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.3s ease;
+}
+
+.add-entry-btn:hover {
+  background: #e0a800;
+}
+
+.diary-entries {
+  background: white;
+  padding: 1.5rem;
+  border-radius: 8px;
+}
+
+.diary-entries h4 {
+  margin-bottom: 1rem;
+  color: #495057;
+}
+
+.no-entries {
+  text-align: center;
+  color: #6c757d;
+  font-style: italic;
+}
+
+.diary-entry {
+  border: 1px solid #dee2e6;
+  border-radius: 8px;
+  padding: 1rem;
+  margin-bottom: 1rem;
+  background: #f8f9fa;
+}
+
+.entry-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 0.75rem;
+  padding-bottom: 0.5rem;
+  border-bottom: 1px solid #dee2e6;
+}
+
+.entry-date {
+  font-weight: 600;
+  color: #495057;
+}
+
+.entry-steps {
+  color: #007bff;
+  font-weight: 500;
+}
+
+.entry-places,
+.entry-notes,
+.entry-learnings {
+  margin-bottom: 0.75rem;
+}
+
+.entry-places strong,
+.entry-notes strong,
+.entry-learnings strong {
+  color: #495057;
+}
+
+.entry-places-list {
+  margin-top: 0.25rem;
+}
+
+.entry-place {
+  display: block;
+  color: #6c757d;
+  font-size: 0.9rem;
+  margin-bottom: 0.25rem;
+}
+
+.entry-notes p,
+.entry-learnings p {
+  margin: 0.25rem 0 0 0;
+  color: #495057;
+  line-height: 1.4;
+}
+
