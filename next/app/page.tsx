@@ -1,4 +1,23 @@
+"use client";
+import { useState, useEffect } from 'react';
+
 export default function Page(){
+  const [favorites, setFavorites] = useState<number[]>([]);
+  const [wishlist, setWishlist] = useState<number[]>([]);
+
+  // localStorage'dan favorileri ve istek listesini yükle
+  useEffect(() => {
+    const savedFavorites = localStorage.getItem('favorites');
+    const savedWishlist = localStorage.getItem('wishlist');
+    
+    if (savedFavorites) {
+      setFavorites(JSON.parse(savedFavorites));
+    }
+    if (savedWishlist) {
+      setWishlist(JSON.parse(savedWishlist));
+    }
+  }, []);
+
   const books = [
     {
       id: 1,
@@ -52,6 +71,24 @@ export default function Page(){
     },
   ];
 
+  const toggleFavorite = (bookId: number) => {
+    const newFavorites = favorites.includes(bookId)
+      ? favorites.filter(id => id !== bookId)
+      : [...favorites, bookId];
+    
+    setFavorites(newFavorites);
+    localStorage.setItem('favorites', JSON.stringify(newFavorites));
+  };
+
+  const toggleWishlist = (bookId: number) => {
+    const newWishlist = wishlist.includes(bookId)
+      ? wishlist.filter(id => id !== bookId)
+      : [...wishlist, bookId];
+    
+    setWishlist(newWishlist);
+    localStorage.setItem('wishlist', JSON.stringify(newWishlist));
+  };
+
   return (
     <>
       <section className="hero-section">
@@ -77,6 +114,22 @@ export default function Page(){
                 ) : (
                   <div className="discount-badge">{book.discount}</div>
                 )}
+                <div className="book-actions-overlay">
+                  <button 
+                    className={`action-btn favorite-btn ${favorites.includes(book.id) ? 'active' : ''}`}
+                    onClick={() => toggleFavorite(book.id)}
+                    title={favorites.includes(book.id) ? 'Favorilerden çıkar' : 'Favorilere ekle'}
+                  >
+                    {favorites.includes(book.id) ? '❤️' : '🤍'}
+                  </button>
+                  <button 
+                    className={`action-btn wishlist-btn ${wishlist.includes(book.id) ? 'active' : ''}`}
+                    onClick={() => toggleWishlist(book.id)}
+                    title={wishlist.includes(book.id) ? 'İstek listesinden çıkar' : 'İstek listesine ekle'}
+                  >
+                    {wishlist.includes(book.id) ? '💝' : '💌'}
+                  </button>
+                </div>
               </div>
               <div className="book-info">
                 <h3 className="book-title">{book.title}</h3>
