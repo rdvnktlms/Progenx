@@ -17,6 +17,7 @@ interface Player {
   y: number;
   totalSteps: number;
   visitedPlaces: string[];
+  lastVisitedPlace: { x: number; y: number } | null;
 }
 
 interface DiaryEntry {
@@ -31,17 +32,13 @@ interface DiaryEntry {
 export default function TatilHaritasiOyunu() {
   const [mapItems, setMapItems] = useState<MapItem[]>([]);
   const [selectedItem, setSelectedItem] = useState<string>('toy-store');
-  const [player, setPlayer] = useState<Player>({ x: 50, y: 50, totalSteps: 0, visitedPlaces: [] });
+  const [player, setPlayer] = useState<Player>({ x: 50, y: 50, totalSteps: 0, visitedPlaces: [], lastVisitedPlace: null });
   const [diaryEntries, setDiaryEntries] = useState<DiaryEntry[]>([]);
   const [currentNote, setCurrentNote] = useState('');
   const [currentLearning, setCurrentLearning] = useState('');
   const [showDiary, setShowDiary] = useState(false);
   const [muted, setMuted] = useState(false);
   const [customDistance, setCustomDistance] = useState('');
-  const [zoomLevel, setZoomLevel] = useState(1);
-  const [panX, setPanX] = useState(0);
-  const [panY, setPanY] = useState(0);
-  const [canvasSize, setCanvasSize] = useState({ width: 600, height: 400 });
   
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const aSuccess = useRef<HTMLAudioElement | null>(null);
@@ -97,23 +94,30 @@ export default function TatilHaritasiOyunu() {
   const visitPlace = (itemId: string) => {
     setMapItems(prev => prev.map(item => {
       if (item.id === itemId && !item.visited) {
+        // Mesafe hesaplama için başlangıç noktasını kullan
+        const startX = player.lastVisitedPlace ? player.lastVisitedPlace.x : player.x;
+        const startY = player.lastVisitedPlace ? player.lastVisitedPlace.y : player.y;
+        
         // Manuel mesafe girişi varsa onu kullan, yoksa otomatik hesapla
         let steps = 0;
         if (customDistance && customDistance.trim() !== '' && !isNaN(Number(customDistance)) && Number(customDistance) > 0) {
           steps = Number(customDistance);
           console.log('Manuel mesafe kullanıldı:', steps);
         } else {
-          // Mesafeyi hesapla (basit mesafe hesabı)
-          const distance = Math.sqrt(Math.pow(item.x - player.x, 2) + Math.pow(item.y - player.y, 2));
+          // Mesafeyi hesapla (en son ziyaret edilen yerden veya başlangıçtan)
+          const distance = Math.sqrt(Math.pow(item.x - startX, 2) + Math.pow(item.y - startY, 2));
           steps = Math.round(distance / 10);
           console.log('Otomatik mesafe hesaplandı:', steps);
         }
         
-        // Sadece adım sayısını artır, çocuk başlangıç konumunda kalsın
+        // Çocuğu yeni konuma taşı ve son ziyaret edilen yeri güncelle
         setPlayer(prev => ({
           ...prev,
+          x: item.x,
+          y: item.y,
           totalSteps: prev.totalSteps + steps,
-          visitedPlaces: [...prev.visitedPlaces, item.label]
+          visitedPlaces: [...prev.visitedPlaces, item.label],
+          lastVisitedPlace: { x: item.x, y: item.y }
         }));
         
         // Mesafe girişini temizle
@@ -147,51 +151,12 @@ export default function TatilHaritasiOyunu() {
     }
   };
 
-  const zoomIn = () => {
-    setZoomLevel(prev => {
-      const newZoom = Math.min(prev + 0.2, 3);
-      // Zoom seviyesine göre canvas boyutunu ayarla
-      const baseSize = { width: 600, height: 400 };
-      setCanvasSize({
-        width: Math.max(baseSize.width, baseSize.width * (newZoom + 0.5)),
-        height: Math.max(baseSize.height, baseSize.height * (newZoom + 0.5))
-      });
-      return newZoom;
-    });
-  };
-
-  const zoomOut = () => {
-    setZoomLevel(prev => {
-      const newZoom = Math.max(prev - 0.2, 0.5);
-      // Zoom seviyesine göre canvas boyutunu ayarla
-      const baseSize = { width: 600, height: 400 };
-      setCanvasSize({
-        width: Math.max(baseSize.width, baseSize.width * (newZoom + 0.5)),
-        height: Math.max(baseSize.height, baseSize.height * (newZoom + 0.5))
-      });
-      return newZoom;
-    });
-  };
-
-  const resetView = () => {
-    setZoomLevel(1);
-    setPanX(0);
-    setPanY(0);
-    setCanvasSize({ width: 600, height: 400 });
-  };
-
-  const goToPlayer = () => {
-    setPanX(-player.x + 300);
-    setPanY(-player.y + 200);
-  };
-
   const clearMap = () => {
     setMapItems([]);
-    setPlayer({ x: 50, y: 50, totalSteps: 0, visitedPlaces: [] });
+    setPlayer({ x: 50, y: 50, totalSteps: 0, visitedPlaces: [], lastVisitedPlace: null });
     setDiaryEntries([]);
     setCurrentNote('');
     setCurrentLearning('');
-    resetView();
   };
 
   const drawMap = () => {
@@ -204,49 +169,40 @@ export default function TatilHaritasiOyunu() {
     // Canvas'ı temizle
     ctx.clearRect(0, 0, canvas.width, canvas.height);
     
-    // Transform uygula (zoom + pan)
-    ctx.save();
-    ctx.translate(panX, panY);
-    ctx.scale(zoomLevel, zoomLevel);
-    
     // Arka plan çiz
     ctx.fillStyle = '#E8F5E8';
-    ctx.fillRect(-panX / zoomLevel, -panY / zoomLevel, canvas.width / zoomLevel, canvas.height / zoomLevel);
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
     
     // Grid çiz
     ctx.strokeStyle = '#D0E0D0';
-    ctx.lineWidth = 1 / zoomLevel;
-    const gridSize = 50;
-    const startX = Math.floor(-panX / zoomLevel / gridSize) * gridSize;
-    const startY = Math.floor(-panY / zoomLevel / gridSize) * gridSize;
-    const endX = startX + canvas.width / zoomLevel + gridSize;
-    const endY = startY + canvas.height / zoomLevel + gridSize;
-    
-    for (let i = startX; i <= endX; i += gridSize) {
+    ctx.lineWidth = 1;
+    for (let i = 0; i <= canvas.width; i += 50) {
       ctx.beginPath();
-      ctx.moveTo(i, startY);
-      ctx.lineTo(i, endY);
+      ctx.moveTo(i, 0);
+      ctx.lineTo(i, canvas.height);
       ctx.stroke();
     }
-    for (let i = startY; i <= endY; i += gridSize) {
+    for (let i = 0; i <= canvas.height; i += 50) {
       ctx.beginPath();
-      ctx.moveTo(startX, i);
-      ctx.lineTo(endX, i);
+      ctx.moveTo(0, i);
+      ctx.lineTo(canvas.width, i);
       ctx.stroke();
     }
     
-    // Başlangıç noktasını çiz (ev)
+    // Başlangıç noktasını çiz (ev) - sabit konum
+    const homeX = 50;
+    const homeY = 50;
     ctx.fillStyle = '#8B4513';
-    ctx.font = `${20 / zoomLevel}px Arial`;
-    ctx.fillText('🏠', player.x - 10 / zoomLevel, player.y + 8 / zoomLevel);
+    ctx.font = '20px Arial';
+    ctx.fillText('🏠', homeX - 10, homeY + 8);
     ctx.fillStyle = '#333';
-    ctx.font = `${12 / zoomLevel}px Arial`;
-    ctx.fillText('BAŞLANGIÇ', player.x - 25 / zoomLevel, player.y + 25 / zoomLevel);
+    ctx.font = '12px Arial';
+    ctx.fillText('BAŞLANGIÇ', homeX - 25, homeY + 25);
     
-    // Çocuk emojisini çiz
+    // Çocuk emojisini çiz (şu anki konumunda)
     ctx.fillStyle = '#FF69B4';
-    ctx.font = `${16 / zoomLevel}px Arial`;
-    ctx.fillText('🧒', player.x + 15 / zoomLevel, player.y + 5 / zoomLevel);
+    ctx.font = '16px Arial';
+    ctx.fillText('🧒', player.x + 15, player.y + 5);
     
     // Harita öğelerini çiz
     mapItems.forEach(item => {
@@ -257,79 +213,49 @@ export default function TatilHaritasiOyunu() {
       if (item.visited) {
         // Ziyaret edilmiş yer için çerçeve çiz
         ctx.strokeStyle = '#00FF00';
-        ctx.lineWidth = 3 / zoomLevel;
-        ctx.strokeRect(item.x - 15 / zoomLevel, item.y - 15 / zoomLevel, 30 / zoomLevel, 30 / zoomLevel);
+        ctx.lineWidth = 3;
+        ctx.strokeRect(item.x - 15, item.y - 15, 30, 30);
       }
       
       // İkon çiz
-      ctx.font = `${24 / zoomLevel}px Arial`;
+      ctx.font = '24px Arial';
       ctx.fillStyle = itemType.color;
-      ctx.fillText(itemType.icon, item.x - 12 / zoomLevel, item.y + 8 / zoomLevel);
+      ctx.fillText(itemType.icon, item.x - 12, item.y + 8);
       
       // Label çiz
-      ctx.font = `${12 / zoomLevel}px Arial`;
+      ctx.font = '12px Arial';
       ctx.fillStyle = item.visited ? '#00AA00' : '#333';
-      ctx.fillText(itemType.label, item.x - 20 / zoomLevel, item.y + 30 / zoomLevel);
+      ctx.fillText(itemType.label, item.x - 20, item.y + 30);
       
       // Mesafe bilgisini çiz
       if (item.visited && item.distance > 0) {
         ctx.fillStyle = '#666';
-        ctx.font = `${10 / zoomLevel}px Arial`;
-        ctx.fillText(`${item.distance} adım`, item.x - 15 / zoomLevel, item.y + 45 / zoomLevel);
+        ctx.font = '10px Arial';
+        ctx.fillText(`${item.distance} adım`, item.x - 15, item.y + 45);
       }
       
-      // Oyuncudan bu yere çizgi çiz
+      // Bu yere çizgi çiz (en son ziyaret edilen yerden veya başlangıçtan)
       if (item.visited) {
         ctx.strokeStyle = '#00AA00';
-        ctx.lineWidth = 2 / zoomLevel;
-        ctx.setLineDash([5 / zoomLevel, 5 / zoomLevel]);
+        ctx.lineWidth = 2;
+        ctx.setLineDash([5, 5]);
         ctx.beginPath();
-        ctx.moveTo(player.x, player.y);
+        
+        // Çizginin başlangıç noktası: en son ziyaret edilen yer veya başlangıç noktası
+        const startX = player.lastVisitedPlace ? player.lastVisitedPlace.x : homeX;
+        const startY = player.lastVisitedPlace ? player.lastVisitedPlace.y : homeY;
+        
+        ctx.moveTo(startX, startY);
         ctx.lineTo(item.x, item.y);
         ctx.stroke();
         ctx.setLineDash([]);
       }
     });
-    
-    // Transform'u geri al
-    ctx.restore();
   };
 
   useEffect(() => {
     drawMap();
-  }, [mapItems, player, zoomLevel, panX, panY, canvasSize]);
-
-  useEffect(() => {
-    const canvas = canvasRef.current;
-    if (!canvas) return;
-
-    const handleWheel = (e: WheelEvent) => {
-      e.preventDefault();
-      const rect = canvas.getBoundingClientRect();
-      const x = e.clientX - rect.left;
-      const y = e.clientY - rect.top;
-      
-      const delta = e.deltaY > 0 ? -0.1 : 0.1;
-      const newZoom = Math.max(0.5, Math.min(3, zoomLevel + delta));
-      
-      // Zoom merkezi mouse pozisyonu
-      const zoomRatio = newZoom / zoomLevel;
-      setPanX(x - (x - panX) * zoomRatio);
-      setPanY(y - (y - panY) * zoomRatio);
-      
-      // Canvas boyutunu güncelle
-      const baseSize = { width: 600, height: 400 };
-      setCanvasSize({
-        width: Math.max(baseSize.width, baseSize.width * (newZoom + 0.5)),
-        height: Math.max(baseSize.height, baseSize.height * (newZoom + 0.5))
-      });
-      
-      setZoomLevel(newZoom);
-    };
-
-    canvas.addEventListener('wheel', handleWheel, { passive: false });
-    return () => canvas.removeEventListener('wheel', handleWheel);
-  }, [zoomLevel, panX, panY]);
+  }, [mapItems, player]);
 
   return (
     <>
@@ -347,18 +273,6 @@ export default function TatilHaritasiOyunu() {
           </button>
           <button className="control-btn diary-btn" onClick={()=>setShowDiary(!showDiary)} title="Günlüğü Aç/Kapat">
             📔
-          </button>
-          <button className="control-btn zoom-in-btn" onClick={zoomIn} title="Yakınlaştır">
-            🔍+
-          </button>
-          <button className="control-btn zoom-out-btn" onClick={zoomOut} title="Uzaklaştır">
-            🔍-
-          </button>
-          <button className="control-btn reset-view-btn" onClick={resetView} title="Görünümü Sıfırla">
-            🎯
-          </button>
-          <button className="control-btn player-location-btn" onClick={goToPlayer} title="Konumuma Git">
-            📍
           </button>
         </div>
       </section>
@@ -382,21 +296,16 @@ export default function TatilHaritasiOyunu() {
         </div>
 
         <div className="map-canvas-container">
-          <div className="canvas-header">
-            <h3>🗺️ Şehir Haritası</h3>
-            <div className="zoom-indicator">
-              <span>Zoom: {Math.round(zoomLevel * 100)}%</span>
-            </div>
-          </div>
+          <h3>🗺️ Şehir Haritası</h3>
           <canvas
             ref={canvasRef}
-            width={canvasSize.width}
-            height={canvasSize.height}
+            width={600}
+            height={400}
             onClick={handleCanvasClick}
             className="map-canvas"
-            style={{ cursor: 'crosshair', border: '2px solid #333', borderRadius: '8px', maxWidth: '100%', height: 'auto' }}
+            style={{ cursor: 'crosshair', border: '2px solid #333', borderRadius: '8px' }}
           />
-          <p className="canvas-instruction">Haritaya tıklayarak yerler ekle, eklediğin yerlere tıklayarak ziyaret et! Mouse wheel ile zoom yapabilirsin.</p>
+          <p className="canvas-instruction">Haritaya tıklayarak yerler ekle, eklediğin yerlere tıklayarak ziyaret et!</p>
         </div>
 
         <div className="player-stats">
