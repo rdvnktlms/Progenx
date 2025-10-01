@@ -21,8 +21,8 @@ export default function Page(){
             <span className="feature">👶 Çocuk Dostu</span>
           </div>
           <a className="cta primary" href="/kitaplar/satranc">Kitabı İncele</a>
-          <a className="cta secondary" href="/oyunlar/kurt-vs-koyunlar">Kurt vs Koyunlar</a>
-          <a className="cta secondary" href="/oyunlar/hirsiz-polis">Hırsız & Polis</a>
+          <a className="cta secondary" href="/oyunlar/hirsiz-polis">Hırsız & Polis <span className="page-number">Sayfa 49</span></a>
+          <a className="cta secondary" href="/oyunlar/kurt-vs-koyunlar">Kurt vs Koyunlar <span className="page-number">Sayfa 59</span></a>
         </div>
       </section>
 
@@ -41,11 +41,11 @@ export default function Page(){
             <span className="feature">👶 Çocuk Dostu</span>
           </div>
           <a className="cta primary" href="/kitaplar/hava-olaylari">Kitabı İncele</a>
-          <a className="cta secondary" href="/oyunlar/yagmur-bulutu">Yağmur Bulutu</a>
-          <a className="cta secondary" href="/oyunlar/ruzgar-yonu">Rüzgar Yönü</a>
-          <a className="cta secondary" href="/oyunlar/gokkusagi-renkleri">Gökkuşağı</a>
-          <a className="cta secondary" href="/oyunlar/firtina-simulatoru">Fırtına Simülatörü</a>
-          <a className="cta secondary" href="/oyunlar/sicaklik-termometresi">Termometre</a>
+          <a className="cta secondary" href="/oyunlar/ruzgar-yonu">Rüzgar Yönü <span className="page-number">Sayfa 8</span></a>
+          <a className="cta secondary" href="/oyunlar/yagmur-bulutu">Yağmur Bulutu <span className="page-number">Sayfa 14</span></a>
+          <a className="cta secondary" href="/oyunlar/gokkusagi-renkleri">Gökkuşağı <span className="page-number">Sayfa 18</span></a>
+          <a className="cta secondary" href="/oyunlar/firtina-simulatoru">Fırtına Simülatörü <span className="page-number">Sayfa 24</span></a>
+          <a className="cta secondary" href="/oyunlar/sicaklik-termometresi">Termometre <span className="page-number">Sayfa 36</span></a>
         </div>
       </section>
 
