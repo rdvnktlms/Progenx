@@ -37,6 +37,7 @@ export default function TatilHaritasiOyunu() {
   const [currentLearning, setCurrentLearning] = useState('');
   const [showDiary, setShowDiary] = useState(false);
   const [muted, setMuted] = useState(false);
+  const [customDistance, setCustomDistance] = useState('');
   
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const aSuccess = useRef<HTMLAudioElement | null>(null);
@@ -92,9 +93,15 @@ export default function TatilHaritasiOyunu() {
   const visitPlace = (itemId: string) => {
     setMapItems(prev => prev.map(item => {
       if (item.id === itemId && !item.visited) {
-        // Mesafeyi hesapla (basit mesafe hesabı)
-        const distance = Math.sqrt(Math.pow(item.x - player.x, 2) + Math.pow(item.y - player.y, 2));
-        const steps = Math.round(distance / 10);
+        // Manuel mesafe girişi varsa onu kullan, yoksa otomatik hesapla
+        let steps = 0;
+        if (customDistance && !isNaN(Number(customDistance)) && Number(customDistance) > 0) {
+          steps = Number(customDistance);
+        } else {
+          // Mesafeyi hesapla (basit mesafe hesabı)
+          const distance = Math.sqrt(Math.pow(item.x - player.x, 2) + Math.pow(item.y - player.y, 2));
+          steps = Math.round(distance / 10);
+        }
         
         // Oyuncuyu yeni konuma taşı
         setPlayer(prev => ({
@@ -104,6 +111,9 @@ export default function TatilHaritasiOyunu() {
           totalSteps: prev.totalSteps + steps,
           visitedPlaces: [...prev.visitedPlaces, item.label]
         }));
+        
+        // Mesafe girişini temizle
+        setCustomDistance('');
         
         return {
           ...item,
@@ -253,32 +263,6 @@ export default function TatilHaritasiOyunu() {
       </section>
 
       <section className="map-creation-section">
-        <div className="player-stats">
-          <h3>🧒 Oyuncu Bilgileri</h3>
-          <div className="stats-grid">
-            <div className="stat-item">
-              <span className="stat-label">📍 Konum:</span>
-              <span className="stat-value">({Math.round(player.x)}, {Math.round(player.y)})</span>
-            </div>
-            <div className="stat-item">
-              <span className="stat-label">👣 Toplam Adım:</span>
-              <span className="stat-value">{player.totalSteps}</span>
-            </div>
-            <div className="stat-item">
-              <span className="stat-label">🏪 Ziyaret Edilen Yerler:</span>
-              <span className="stat-value">{player.visitedPlaces.length}</span>
-            </div>
-          </div>
-          <div className="visited-places">
-            <strong>Ziyaret Edilen Yerler:</strong>
-            <div className="places-list">
-              {player.visitedPlaces.map((place, index) => (
-                <span key={index} className="visited-place">✓ {place}</span>
-              ))}
-            </div>
-          </div>
-        </div>
-
         <div className="map-tools">
           <h3>🎨 Yer Ekleme Araçları</h3>
           <div className="tool-selection">
@@ -307,6 +291,45 @@ export default function TatilHaritasiOyunu() {
             style={{ cursor: 'crosshair', border: '2px solid #333', borderRadius: '8px' }}
           />
           <p className="canvas-instruction">Haritaya tıklayarak yerler ekle, eklediğin yerlere tıklayarak ziyaret et!</p>
+        </div>
+
+        <div className="player-stats">
+          <h3>🧒 Oyuncu Bilgileri</h3>
+          <div className="stats-grid">
+            <div className="stat-item">
+              <span className="stat-label">📍 Konum:</span>
+              <span className="stat-value">({Math.round(player.x)}, {Math.round(player.y)})</span>
+            </div>
+            <div className="stat-item">
+              <span className="stat-label">👣 Toplam Adım:</span>
+              <span className="stat-value">{player.totalSteps}</span>
+            </div>
+            <div className="stat-item">
+              <span className="stat-label">🏪 Ziyaret Edilen Yerler:</span>
+              <span className="stat-value">{player.visitedPlaces.length}</span>
+            </div>
+          </div>
+          
+          <div className="distance-input">
+            <label>👣 Mesafe Girişi (Adım):</label>
+            <input 
+              type="number" 
+              value={customDistance}
+              onChange={(e) => setCustomDistance(e.target.value)}
+              placeholder="Boş bırak otomatik hesapla"
+              min="0"
+            />
+            <small>Boş bırakırsan otomatik hesaplanır</small>
+          </div>
+          
+          <div className="visited-places">
+            <strong>Ziyaret Edilen Yerler:</strong>
+            <div className="places-list">
+              {player.visitedPlaces.map((place, index) => (
+                <span key={index} className="visited-place">✓ {place}</span>
+              ))}
+            </div>
+          </div>
         </div>
 
         <div className="places-list-container">
