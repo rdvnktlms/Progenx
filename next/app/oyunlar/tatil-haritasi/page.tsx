@@ -41,6 +41,7 @@ export default function TatilHaritasiOyunu() {
   const [zoomLevel, setZoomLevel] = useState(1);
   const [panX, setPanX] = useState(0);
   const [panY, setPanY] = useState(0);
+  const [canvasSize, setCanvasSize] = useState({ width: 600, height: 400 });
   
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const aSuccess = useRef<HTMLAudioElement | null>(null);
@@ -147,17 +148,36 @@ export default function TatilHaritasiOyunu() {
   };
 
   const zoomIn = () => {
-    setZoomLevel(prev => Math.min(prev + 0.2, 3));
+    setZoomLevel(prev => {
+      const newZoom = Math.min(prev + 0.2, 3);
+      // Zoom seviyesine göre canvas boyutunu ayarla
+      const baseSize = { width: 600, height: 400 };
+      setCanvasSize({
+        width: Math.max(baseSize.width, baseSize.width * (newZoom + 0.5)),
+        height: Math.max(baseSize.height, baseSize.height * (newZoom + 0.5))
+      });
+      return newZoom;
+    });
   };
 
   const zoomOut = () => {
-    setZoomLevel(prev => Math.max(prev - 0.2, 0.5));
+    setZoomLevel(prev => {
+      const newZoom = Math.max(prev - 0.2, 0.5);
+      // Zoom seviyesine göre canvas boyutunu ayarla
+      const baseSize = { width: 600, height: 400 };
+      setCanvasSize({
+        width: Math.max(baseSize.width, baseSize.width * (newZoom + 0.5)),
+        height: Math.max(baseSize.height, baseSize.height * (newZoom + 0.5))
+      });
+      return newZoom;
+    });
   };
 
   const resetView = () => {
     setZoomLevel(1);
     setPanX(0);
     setPanY(0);
+    setCanvasSize({ width: 600, height: 400 });
   };
 
   const goToPlayer = () => {
@@ -277,7 +297,7 @@ export default function TatilHaritasiOyunu() {
 
   useEffect(() => {
     drawMap();
-  }, [mapItems, player, zoomLevel, panX, panY]);
+  }, [mapItems, player, zoomLevel, panX, panY, canvasSize]);
 
   useEffect(() => {
     const canvas = canvasRef.current;
@@ -296,6 +316,14 @@ export default function TatilHaritasiOyunu() {
       const zoomRatio = newZoom / zoomLevel;
       setPanX(x - (x - panX) * zoomRatio);
       setPanY(y - (y - panY) * zoomRatio);
+      
+      // Canvas boyutunu güncelle
+      const baseSize = { width: 600, height: 400 };
+      setCanvasSize({
+        width: Math.max(baseSize.width, baseSize.width * (newZoom + 0.5)),
+        height: Math.max(baseSize.height, baseSize.height * (newZoom + 0.5))
+      });
+      
       setZoomLevel(newZoom);
     };
 
@@ -362,11 +390,11 @@ export default function TatilHaritasiOyunu() {
           </div>
           <canvas
             ref={canvasRef}
-            width={600}
-            height={400}
+            width={canvasSize.width}
+            height={canvasSize.height}
             onClick={handleCanvasClick}
             className="map-canvas"
-            style={{ cursor: 'crosshair', border: '2px solid #333', borderRadius: '8px' }}
+            style={{ cursor: 'crosshair', border: '2px solid #333', borderRadius: '8px', maxWidth: '100%', height: 'auto' }}
           />
           <p className="canvas-instruction">Haritaya tıklayarak yerler ekle, eklediğin yerlere tıklayarak ziyaret et! Mouse wheel ile zoom yapabilirsin.</p>
         </div>
