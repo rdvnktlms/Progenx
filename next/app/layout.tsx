@@ -21,13 +21,44 @@ export default function RootLayout({ children }: { children: ReactNode }) {
               <a href="/">Ana Sayfa</a>
               <div className="user-dropdown">
                 <button className="user-btn">
-                  👤 Kullanıcı
+                  <div className="user-avatar">👤</div>
+                  <div className="user-info">
+                    <span className="user-name">Kullanıcı</span>
+                    <span className="user-status">Giriş Yapmış</span>
+                  </div>
                   <span className="dropdown-arrow">▼</span>
                 </button>
                 <div className="dropdown-menu">
-                  <a href="/kitaplarim">📚 Kitaplarım</a>
-                  <a href="/profil">⚙️ Profil</a>
-                  <a href="/cikis">🚪 Çıkış</a>
+                  <div className="dropdown-header">
+                    <div className="user-avatar-large">👤</div>
+                    <div className="user-details">
+                      <span className="user-name-large">Kullanıcı</span>
+                      <span className="user-email">user@example.com</span>
+                    </div>
+                  </div>
+                  <div className="dropdown-divider"></div>
+                  <a href="/kitaplarim" className="dropdown-item">
+                    <span className="item-icon">📚</span>
+                    <span className="item-text">Kitaplarım</span>
+                    <span className="item-badge">5</span>
+                  </a>
+                  <a href="/hesap" className="dropdown-item">
+                    <span className="item-icon">💳</span>
+                    <span className="item-text">Hesap</span>
+                  </a>
+                  <a href="/profil" className="dropdown-item">
+                    <span className="item-icon">⚙️</span>
+                    <span className="item-text">Profil Ayarları</span>
+                  </a>
+                  <a href="/favoriler" className="dropdown-item">
+                    <span className="item-icon">❤️</span>
+                    <span className="item-text">Favoriler</span>
+                  </a>
+                  <div className="dropdown-divider"></div>
+                  <a href="/cikis" className="dropdown-item logout">
+                    <span className="item-icon">🚪</span>
+                    <span className="item-text">Çıkış Yap</span>
+                  </a>
                 </div>
               </div>
             </nav>
