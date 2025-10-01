@@ -19,8 +19,17 @@ export default function RootLayout({ children }: { children: ReactNode }) {
             </a>
             <nav className="nav">
               <a href="/">Ana Sayfa</a>
-              <a href="/kullanici">Kullanıcı</a>
-              <a href="/kitaplarim">Kitaplarım</a>
+              <div className="user-dropdown">
+                <button className="user-btn">
+                  👤 Kullanıcı
+                  <span className="dropdown-arrow">▼</span>
+                </button>
+                <div className="dropdown-menu">
+                  <a href="/kitaplarim">📚 Kitaplarım</a>
+                  <a href="/profil">⚙️ Profil</a>
+                  <a href="/cikis">🚪 Çıkış</a>
+                </div>
+              </div>
             </nav>
           </header>
           {children}
