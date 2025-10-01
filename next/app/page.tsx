@@ -50,39 +50,6 @@ export default function Page(){
       discount: "20%",
       link: "/kitaplar/tatilde-50-macera"
     },
-    {
-      id: 6,
-      title: "Renklerle Matematik",
-      author: "Matematik Öğretmeni",
-      cover: "/img/benim-kucuk-deneylerim-mekanik...-5-4bcd.jpg",
-      originalPrice: "₺195,00",
-      currentPrice: "₺156,00",
-      discount: "20%",
-      link: "/kitaplar/renklerle-matematik",
-      comingSoon: true
-    },
-    {
-      id: 7,
-      title: "Masal Labirenti",
-      author: "Masal Uzmanı",
-      cover: "/img/benim-kucuk-deneylerim-mekanik...-5-4bcd.jpg",
-      originalPrice: "₺195,00",
-      currentPrice: "₺156,00",
-      discount: "20%",
-      link: "/kitaplar/masal-labirenti",
-      comingSoon: true
-    },
-    {
-      id: 8,
-      title: "Bilim Maceraları",
-      author: "Bilim Uzmanı",
-      cover: "/img/benim-kucuk-deneylerim-mekanik...-5-4bcd.jpg",
-      originalPrice: "₺195,00",
-      currentPrice: "₺156,00",
-      discount: "20%",
-      link: "/kitaplar/bilim-maceralari",
-      comingSoon: true
-    }
   ];
 
   return (
