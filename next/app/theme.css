@@ -3132,9 +3132,26 @@ body{margin:0;font-family:ui-sans-serif,system-ui,-apple-system,Segoe UI,Roboto,
   align-items: center;
 }
 
-.map-canvas-container h3 {
+.canvas-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
   margin-bottom: 1rem;
+}
+
+.canvas-header h3 {
+  margin: 0;
   color: #495057;
+}
+
+.zoom-indicator {
+  background: #e9ecef;
+  padding: 0.25rem 0.5rem;
+  border-radius: 4px;
+  font-size: 0.8rem;
+  color: #495057;
+  font-weight: 500;
 }
 
 .map-canvas {
@@ -3361,5 +3378,23 @@ body{margin:0;font-family:ui-sans-serif,system-ui,-apple-system,Segoe UI,Roboto,
   margin: 0.25rem 0 0 0;
   color: #495057;
   line-height: 1.4;
+}
+
+/* Zoom ve Navigasyon Butonları */
+.zoom-in-btn {
+  background: #28a745 !important;
+}
+
+.zoom-out-btn {
+  background: #ffc107 !important;
+  color: #212529 !important;
+}
+
+.reset-view-btn {
+  background: #17a2b8 !important;
+}
+
+.player-location-btn {
+  background: #6f42c1 !important;
 }
 

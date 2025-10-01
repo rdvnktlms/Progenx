@@ -38,6 +38,9 @@ export default function TatilHaritasiOyunu() {
   const [showDiary, setShowDiary] = useState(false);
   const [muted, setMuted] = useState(false);
   const [customDistance, setCustomDistance] = useState('');
+  const [zoomLevel, setZoomLevel] = useState(1);
+  const [panX, setPanX] = useState(0);
+  const [panY, setPanY] = useState(0);
   
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const aSuccess = useRef<HTMLAudioElement | null>(null);
@@ -143,12 +146,32 @@ export default function TatilHaritasiOyunu() {
     }
   };
 
+  const zoomIn = () => {
+    setZoomLevel(prev => Math.min(prev + 0.2, 3));
+  };
+
+  const zoomOut = () => {
+    setZoomLevel(prev => Math.max(prev - 0.2, 0.5));
+  };
+
+  const resetView = () => {
+    setZoomLevel(1);
+    setPanX(0);
+    setPanY(0);
+  };
+
+  const goToPlayer = () => {
+    setPanX(-player.x + 300);
+    setPanY(-player.y + 200);
+  };
+
   const clearMap = () => {
     setMapItems([]);
     setPlayer({ x: 50, y: 50, totalSteps: 0, visitedPlaces: [] });
     setDiaryEntries([]);
     setCurrentNote('');
     setCurrentLearning('');
+    resetView();
   };
 
   const drawMap = () => {
@@ -161,38 +184,49 @@ export default function TatilHaritasiOyunu() {
     // Canvas'ı temizle
     ctx.clearRect(0, 0, canvas.width, canvas.height);
     
+    // Transform uygula (zoom + pan)
+    ctx.save();
+    ctx.translate(panX, panY);
+    ctx.scale(zoomLevel, zoomLevel);
+    
     // Arka plan çiz
     ctx.fillStyle = '#E8F5E8';
-    ctx.fillRect(0, 0, canvas.width, canvas.height);
+    ctx.fillRect(-panX / zoomLevel, -panY / zoomLevel, canvas.width / zoomLevel, canvas.height / zoomLevel);
     
     // Grid çiz
     ctx.strokeStyle = '#D0E0D0';
-    ctx.lineWidth = 1;
-    for (let i = 0; i <= canvas.width; i += 50) {
+    ctx.lineWidth = 1 / zoomLevel;
+    const gridSize = 50;
+    const startX = Math.floor(-panX / zoomLevel / gridSize) * gridSize;
+    const startY = Math.floor(-panY / zoomLevel / gridSize) * gridSize;
+    const endX = startX + canvas.width / zoomLevel + gridSize;
+    const endY = startY + canvas.height / zoomLevel + gridSize;
+    
+    for (let i = startX; i <= endX; i += gridSize) {
       ctx.beginPath();
-      ctx.moveTo(i, 0);
-      ctx.lineTo(i, canvas.height);
+      ctx.moveTo(i, startY);
+      ctx.lineTo(i, endY);
       ctx.stroke();
     }
-    for (let i = 0; i <= canvas.height; i += 50) {
+    for (let i = startY; i <= endY; i += gridSize) {
       ctx.beginPath();
-      ctx.moveTo(0, i);
-      ctx.lineTo(canvas.width, i);
+      ctx.moveTo(startX, i);
+      ctx.lineTo(endX, i);
       ctx.stroke();
     }
     
     // Başlangıç noktasını çiz (ev)
     ctx.fillStyle = '#8B4513';
-    ctx.font = '20px Arial';
-    ctx.fillText('🏠', player.x - 10, player.y + 8);
+    ctx.font = `${20 / zoomLevel}px Arial`;
+    ctx.fillText('🏠', player.x - 10 / zoomLevel, player.y + 8 / zoomLevel);
     ctx.fillStyle = '#333';
-    ctx.font = '12px Arial';
-    ctx.fillText('BAŞLANGIÇ', player.x - 25, player.y + 25);
+    ctx.font = `${12 / zoomLevel}px Arial`;
+    ctx.fillText('BAŞLANGIÇ', player.x - 25 / zoomLevel, player.y + 25 / zoomLevel);
     
     // Çocuk emojisini çiz
     ctx.fillStyle = '#FF69B4';
-    ctx.font = '16px Arial';
-    ctx.fillText('🧒', player.x + 15, player.y + 5);
+    ctx.font = `${16 / zoomLevel}px Arial`;
+    ctx.fillText('🧒', player.x + 15 / zoomLevel, player.y + 5 / zoomLevel);
     
     // Harita öğelerini çiz
     mapItems.forEach(item => {
@@ -203,32 +237,32 @@ export default function TatilHaritasiOyunu() {
       if (item.visited) {
         // Ziyaret edilmiş yer için çerçeve çiz
         ctx.strokeStyle = '#00FF00';
-        ctx.lineWidth = 3;
-        ctx.strokeRect(item.x - 15, item.y - 15, 30, 30);
+        ctx.lineWidth = 3 / zoomLevel;
+        ctx.strokeRect(item.x - 15 / zoomLevel, item.y - 15 / zoomLevel, 30 / zoomLevel, 30 / zoomLevel);
       }
       
       // İkon çiz
-      ctx.font = '24px Arial';
+      ctx.font = `${24 / zoomLevel}px Arial`;
       ctx.fillStyle = itemType.color;
-      ctx.fillText(itemType.icon, item.x - 12, item.y + 8);
+      ctx.fillText(itemType.icon, item.x - 12 / zoomLevel, item.y + 8 / zoomLevel);
       
       // Label çiz
-      ctx.font = '12px Arial';
+      ctx.font = `${12 / zoomLevel}px Arial`;
       ctx.fillStyle = item.visited ? '#00AA00' : '#333';
-      ctx.fillText(itemType.label, item.x - 20, item.y + 30);
+      ctx.fillText(itemType.label, item.x - 20 / zoomLevel, item.y + 30 / zoomLevel);
       
       // Mesafe bilgisini çiz
       if (item.visited && item.distance > 0) {
         ctx.fillStyle = '#666';
-        ctx.font = '10px Arial';
-        ctx.fillText(`${item.distance} adım`, item.x - 15, item.y + 45);
+        ctx.font = `${10 / zoomLevel}px Arial`;
+        ctx.fillText(`${item.distance} adım`, item.x - 15 / zoomLevel, item.y + 45 / zoomLevel);
       }
       
       // Oyuncudan bu yere çizgi çiz
       if (item.visited) {
         ctx.strokeStyle = '#00AA00';
-        ctx.lineWidth = 2;
-        ctx.setLineDash([5, 5]);
+        ctx.lineWidth = 2 / zoomLevel;
+        ctx.setLineDash([5 / zoomLevel, 5 / zoomLevel]);
         ctx.beginPath();
         ctx.moveTo(player.x, player.y);
         ctx.lineTo(item.x, item.y);
@@ -236,11 +270,38 @@ export default function TatilHaritasiOyunu() {
         ctx.setLineDash([]);
       }
     });
+    
+    // Transform'u geri al
+    ctx.restore();
   };
 
   useEffect(() => {
     drawMap();
-  }, [mapItems, player]);
+  }, [mapItems, player, zoomLevel, panX, panY]);
+
+  useEffect(() => {
+    const canvas = canvasRef.current;
+    if (!canvas) return;
+
+    const handleWheel = (e: WheelEvent) => {
+      e.preventDefault();
+      const rect = canvas.getBoundingClientRect();
+      const x = e.clientX - rect.left;
+      const y = e.clientY - rect.top;
+      
+      const delta = e.deltaY > 0 ? -0.1 : 0.1;
+      const newZoom = Math.max(0.5, Math.min(3, zoomLevel + delta));
+      
+      // Zoom merkezi mouse pozisyonu
+      const zoomRatio = newZoom / zoomLevel;
+      setPanX(x - (x - panX) * zoomRatio);
+      setPanY(y - (y - panY) * zoomRatio);
+      setZoomLevel(newZoom);
+    };
+
+    canvas.addEventListener('wheel', handleWheel, { passive: false });
+    return () => canvas.removeEventListener('wheel', handleWheel);
+  }, [zoomLevel, panX, panY]);
 
   return (
     <>
@@ -258,6 +319,18 @@ export default function TatilHaritasiOyunu() {
           </button>
           <button className="control-btn diary-btn" onClick={()=>setShowDiary(!showDiary)} title="Günlüğü Aç/Kapat">
             📔
+          </button>
+          <button className="control-btn zoom-in-btn" onClick={zoomIn} title="Yakınlaştır">
+            🔍+
+          </button>
+          <button className="control-btn zoom-out-btn" onClick={zoomOut} title="Uzaklaştır">
+            🔍-
+          </button>
+          <button className="control-btn reset-view-btn" onClick={resetView} title="Görünümü Sıfırla">
+            🎯
+          </button>
+          <button className="control-btn player-location-btn" onClick={goToPlayer} title="Konumuma Git">
+            📍
           </button>
         </div>
       </section>
@@ -281,7 +354,12 @@ export default function TatilHaritasiOyunu() {
         </div>
 
         <div className="map-canvas-container">
-          <h3>🗺️ Şehir Haritası</h3>
+          <div className="canvas-header">
+            <h3>🗺️ Şehir Haritası</h3>
+            <div className="zoom-indicator">
+              <span>Zoom: {Math.round(zoomLevel * 100)}%</span>
+            </div>
+          </div>
           <canvas
             ref={canvasRef}
             width={600}
@@ -290,7 +368,7 @@ export default function TatilHaritasiOyunu() {
             className="map-canvas"
             style={{ cursor: 'crosshair', border: '2px solid #333', borderRadius: '8px' }}
           />
-          <p className="canvas-instruction">Haritaya tıklayarak yerler ekle, eklediğin yerlere tıklayarak ziyaret et!</p>
+          <p className="canvas-instruction">Haritaya tıklayarak yerler ekle, eklediğin yerlere tıklayarak ziyaret et! Mouse wheel ile zoom yapabilirsin.</p>
         </div>
 
         <div className="player-stats">
