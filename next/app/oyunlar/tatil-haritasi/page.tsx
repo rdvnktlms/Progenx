@@ -234,18 +234,32 @@ export default function TatilHaritasiOyunu() {
         ctx.fillText(`${item.distance} adım`, item.x - 15, item.y + 45);
       }
       
-      // Bu yere çizgi çiz (en son ziyaret edilen yerden veya başlangıçtan)
+      // Bu yere çizgi çiz (sabit konumlar arasında)
       if (item.visited) {
         ctx.strokeStyle = '#00AA00';
         ctx.lineWidth = 2;
         ctx.setLineDash([5, 5]);
         ctx.beginPath();
         
-        // Çizginin başlangıç noktası: en son ziyaret edilen yer veya başlangıç noktası
-        const startX = player.lastVisitedPlace ? player.lastVisitedPlace.x : homeX;
-        const startY = player.lastVisitedPlace ? player.lastVisitedPlace.y : homeY;
+        // Bu item'ın hangi sırada ziyaret edildiğini bul
+        const visitedIndex = player.visitedPlaces.indexOf(item.label);
         
-        ctx.moveTo(startX, startY);
+        if (visitedIndex === 0) {
+          // İlk ziyaret edilen yer - başlangıç noktasından çiz
+          ctx.moveTo(homeX, homeY);
+        } else {
+          // Sonraki ziyaretler - önceki ziyaret edilen yerden çiz
+          const previousVisitedItem = mapItems.find(mapItem => 
+            mapItem.visited && player.visitedPlaces[visitedIndex - 1] === mapItem.label
+          );
+          if (previousVisitedItem) {
+            ctx.moveTo(previousVisitedItem.x, previousVisitedItem.y);
+          } else {
+            // Fallback: başlangıç noktasından çiz
+            ctx.moveTo(homeX, homeY);
+          }
+        }
+        
         ctx.lineTo(item.x, item.y);
         ctx.stroke();
         ctx.setLineDash([]);
