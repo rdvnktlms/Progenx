@@ -26,17 +26,17 @@ export default function Tatilde50MaceraPage(){
         <h2>🎮 Macera Aktiviteleri</h2>
         <div className="experiments-grid">
           <div className="experiment-card">
-            <div className="experiment-icon">🗺️</div>
-            <h3>Tatil Haritası Çizme</h3>
-            <p>Önemli yerleri ve hayalî karakterleri haritana ekle!</p>
-            <a href="/oyunlar/tatil-haritasi" className="play-btn">Dene</a>
+            <div className="experiment-icon">🎒</div>
+            <h3>Sırt Çantası Hazırlama <span className="page-number">Macera 2, Sayfa 21</span></h3>
+            <p>Sadece gerekli eşyaları seç ve doğru ağırlıkta hazırla!</p>
+            <a href="/oyunlar/sirt-cantasi" className="play-btn">Dene</a>
           </div>
           
           <div className="experiment-card">
-            <div className="experiment-icon">🎒</div>
-            <h3>Sırt Çantası Hazırlama</h3>
-            <p>Sadece gerekli eşyaları seç ve doğru ağırlıkta hazırla!</p>
-            <a href="/oyunlar/sirt-cantasi" className="play-btn">Dene</a>
+            <div className="experiment-icon">🗺️</div>
+            <h3>Tatil Haritası Çizme <span className="page-number">Macera 4, Sayfa 28</span></h3>
+            <p>Önemli yerleri ve hayalî karakterleri haritana ekle!</p>
+            <a href="/oyunlar/tatil-haritasi" className="play-btn">Dene</a>
           </div>
         </div>
       </div>

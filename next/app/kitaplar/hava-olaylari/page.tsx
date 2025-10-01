@@ -26,36 +26,36 @@ export default function HavaOlaylariPage(){
         <h2>🎮 Hava Oyunları</h2>
         <div className="games-grid">
           <div className="game-card">
-            <div className="game-icon">🌧️</div>
-            <h3>Yağmur Bulutu</h3>
-            <p>Su damlalarını bulutlardan yere düşür!</p>
-            <a href="/oyunlar/yagmur-bulutu" className="play-btn">Oyna</a>
-          </div>
-          
-          <div className="game-card">
             <div className="game-icon">🌪️</div>
-            <h3>Rüzgar Yönü</h3>
+            <h3>Rüzgar Yönü <span className="page-number">Sayfa 8</span></h3>
             <p>Rüzgarın yönünü doğru tahmin et!</p>
             <a href="/oyunlar/ruzgar-yonu" className="play-btn">Oyna</a>
           </div>
           
           <div className="game-card">
+            <div className="game-icon">🌧️</div>
+            <h3>Yağmur Bulutu <span className="page-number">Sayfa 14</span></h3>
+            <p>Su damlalarını bulutlardan yere düşür!</p>
+            <a href="/oyunlar/yagmur-bulutu" className="play-btn">Oyna</a>
+          </div>
+          
+          <div className="game-card">
             <div className="game-icon">🌈</div>
-            <h3>Gökkuşağı Renkleri</h3>
+            <h3>Gökkuşağı Renkleri <span className="page-number">Sayfa 18</span></h3>
             <p>Gökkuşağının renklerini doğru sıraya koy!</p>
             <a href="/oyunlar/gokkusagi-renkleri" className="play-btn">Oyna</a>
           </div>
           
           <div className="game-card">
             <div className="game-icon">⚡</div>
-            <h3>Fırtına Simülatörü</h3>
+            <h3>Fırtına Simülatörü <span className="page-number">Sayfa 24</span></h3>
             <p>Fırtına oluşturmak için elementleri seç!</p>
             <a href="/oyunlar/firtina-simulatoru" className="play-btn">Oyna</a>
           </div>
           
           <div className="game-card">
             <div className="game-icon">🌡️</div>
-            <h3>Sıcaklık Termometresi</h3>
+            <h3>Sıcaklık Termometresi <span className="page-number">Sayfa 36</span></h3>
             <p>Hava durumuna göre sıcaklık ayarla!</p>
             <a href="/oyunlar/sicaklik-termometresi" className="play-btn">Oyna</a>
           </div>

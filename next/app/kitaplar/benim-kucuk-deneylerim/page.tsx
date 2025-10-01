@@ -27,21 +27,21 @@ export default function BenimKucukDeneylerimPage(){
         <div className="experiments-grid">
           <div className="experiment-card">
             <div className="experiment-icon">🎈</div>
-            <h3>Fırlayan Balon</h3>
+            <h3>Fırlayan Balon <span className="page-number">Sayfa 8</span></h3>
             <p>Hava basıncı ile balonu fırlat! İtme kuvvetini öğren!</p>
             <a href="/oyunlar/firlayan-balon" className="play-btn">Dene</a>
           </div>
           
           <div className="experiment-card">
             <div className="experiment-icon">🚢</div>
-            <h3>Su Gemisi</h3>
+            <h3>Su Gemisi <span className="page-number">Sayfa 10</span></h3>
             <p>Gemini suda yüzdür! Yüzdürme prensibini keşfet!</p>
             <a href="/oyunlar/su-gemisi" className="play-btn">Dene</a>
           </div>
           
           <div className="experiment-card">
             <div className="experiment-icon">🌉</div>
-            <h3>Asma Köprü</h3>
+            <h3>Asma Köprü <span className="page-number">Sayfa 18</span></h3>
             <p>Köprü inşa et! Yapı mühendisliğini keşfet!</p>
             <a href="/oyunlar/asma-kopru" className="play-btn">Dene</a>
           </div>
