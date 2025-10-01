@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="tr">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Kurt vs Koyunlar</title>
+    <link rel="stylesheet" href="../../assets/styles/theme.css" />
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <div class="container">
+      <header class="site-header">
+        <a class="brand" href="../../index.html">
+          <div class="brand-logo">İK</div>
+          <h1>İnteraktif Kitaplar</h1>
+        </a>
+        <nav class="nav">
+          <a href="../../index.html">Ana Sayfa</a>
+          <a href="../../pages/books.html">Kitaplar</a>
+          <a href="../../pages/book-satranc.html">Oyunlarla Satranç</a>
+        </nav>
+      </header>
+
+      <div class="breadcrumbs">
+        <a href="../../index.html">Ana Sayfa</a> › <a href="../../pages/books.html">Kitaplar</a> › <a href="../../pages/book-satranc.html">Oyunlarla Satranç</a> › <span>Kurt vs Koyunlar</span>
+      </div>
+
+      <section class="game-top">
+        <div class="status">
+          <span id="turnLabel">Sıra: Oyuncu (Koyunlar)</span>
+          <span id="message"></span>
+        </div>
+        <div class="right-controls">
+          <label> Zorluk
+            <select id="difficulty">
+              <option value="easy">Kolay</option>
+              <option value="normal" selected>Orta</option>
+              <option value="hard">Zor</option>
+            </select>
+          </label>
+          <button id="muteBtn" aria-pressed="false">🔊 Ses Açık</button>
+          <button id="resetBtn" type="button">↺ Yeni Oyun</button>
+        </div>
+      </section>
+
+      <section class="board-scene">
+        <div class="forest-bg">
+          <div class="board-frame">
+            <div id="board" class="board" aria-label="Tahta"></div>
+          </div>
+          <div class="pond"></div>
+        </div>
+        <aside class="sidebar">
+          <div class="legend">
+            <p><strong>Hedef:</strong> Koyunlar en üste ulaşırsa kazanır. Kurt tüm koyunları alırsa kaybedersin.</p>
+            <ul>
+              <li>Koyun: ileri 1 kare, çapraz ileri yakalar.</li>
+              <li>Kurt: her yönde gider ve yakalar.</li>
+            </ul>
+          </div>
+          <div class="score">
+            <h4>Puan</h4>
+            <div>Oyun: <span id="scoreGame">0</span></div>
+            <div>Rekor: <span id="scoreBest">0</span></div>
+          </div>
+          <div class="touch-controls" aria-label="Dokunmatik Kontroller">
+            <button id="btnUp">⬆️</button>
+            <div class="lr">
+              <button id="btnLeft">⬅️</button>
+              <button id="btnRight">➡️</button>
+            </div>
+          </div>
+        </aside>
+      </section>
+
+      <footer class="footer">
+        <small>İnteraktif Kitap Projesi – Kurt vs Koyunlar</small>
+      </footer>
+    </div>
+
+    <script defer src="script.js"></script>
+  </body>
+  </html>
+
+
