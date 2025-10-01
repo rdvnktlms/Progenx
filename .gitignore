@@ -82,6 +82,13 @@ jspm_packages/
 *.swp
 *.swo
 
+# Large video files
+*.mp4
+*.avi
+*.mov
+*.wmv
+*.mkv
+
 # OS generated files
 .DS_Store
 .DS_Store?
