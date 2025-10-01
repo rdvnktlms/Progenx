@@ -13,7 +13,7 @@ export default function Page(){
     {
       id: 2,
       title: "Hava Olayları",
-      author: "Doğa Bilimci",
+      author: "Elisabeth de LAMBILLY",
       cover: "/img/hava-4a9c-b724-.jpg",
       originalPrice: "₺195,00",
       currentPrice: "₺156,00",
@@ -23,7 +23,7 @@ export default function Page(){
     {
       id: 3,
       title: "Benim Küçük Deneylerim",
-      author: "Bilim Öğretmeni",
+      author: "Melanie PEREZ",
       cover: "/img/benim-kucuk-deneylerim-mekanik...-5-4bcd.jpg",
       originalPrice: "₺195,00",
       currentPrice: "₺156,00",
@@ -33,7 +33,7 @@ export default function Page(){
     {
       id: 4,
       title: "Atalarımızdan Dersler",
-      author: "Tarih Uzmanı",
+      author: "Raksha Dave",
       cover: "/img/atalarımızdan dersler.jpg",
       originalPrice: "₺195,00",
       currentPrice: "₺156,00",
@@ -42,8 +42,8 @@ export default function Page(){
     },
     {
       id: 5,
-      title: "Tatilde 50 Macera",
-      author: "Macera Uzmanı",
+      title: "13 Yaşına Gelmeden Tatilde Yaşanacak 50 Macera İçin Kılavuz",
+      author: "P.D. BACCALARIO",
       cover: "/img/tatil kitabı.jpg",
       originalPrice: "₺195,00",
       currentPrice: "₺156,00",
