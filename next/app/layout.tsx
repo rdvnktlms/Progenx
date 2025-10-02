@@ -2,11 +2,15 @@
 import './theme.css';
 import type { ReactNode } from 'react';
 import { useEffect, useState } from 'react';
+import { AuthProvider } from './contexts/AuthContext';
+import Header from './components/Header';
 
 export default function RootLayout({ children }: { children: ReactNode }) {
   const [isAdminPage, setIsAdminPage] = useState(false);
+  const [isClient, setIsClient] = useState(false);
 
   useEffect(() => {
+    setIsClient(true);
     if (typeof window !== 'undefined') {
       const path = window.location.pathname;
       setIsAdminPage(path.startsWith('/admin'));
@@ -19,64 +23,11 @@ export default function RootLayout({ children }: { children: ReactNode }) {
         <title>İnteraktif Kitaplar</title>
       </head>
       <body>
-        <div className="container">
-          {!isAdminPage && (
-            <header className="site-header">
-              <a className="brand" href="/">
-                <div className="brand-logo">
-                  <img src="/img/icon.png" alt="İnteraktif Kitaplar" className="brand-icon" />
-                </div>
-                <h1>İnteraktif Kitaplar</h1>
-              </a>
-              <nav className="nav">
-                <a href="/">Ana Sayfa</a>
-                <div className="user-dropdown">
-                  <button className="user-btn">
-                    <div className="user-avatar">👤</div>
-                    <div className="user-info">
-                      <span className="user-name">Kullanıcı</span>
-                      <span className="user-status">Giriş Yapmış</span>
-                    </div>
-                    <span className="dropdown-arrow">▼</span>
-                  </button>
-                  <div className="dropdown-menu">
-                    <div className="dropdown-header">
-                      <div className="user-avatar-large">👤</div>
-                      <div className="user-details">
-                        <span className="user-name-large">Kullanıcı</span>
-                        <span className="user-email">user@example.com</span>
-                      </div>
-                    </div>
-                    <div className="dropdown-divider"></div>
-                    <a href="/kitaplarim" className="dropdown-item">
-                      <span className="item-icon">📚</span>
-                      <span className="item-text">Kitaplarım</span>
-                      <span className="item-badge">5</span>
-                    </a>
-                    <a href="/hesap" className="dropdown-item">
-                      <span className="item-icon">💳</span>
-                      <span className="item-text">Hesap</span>
-                    </a>
-                    <a href="/profil" className="dropdown-item">
-                      <span className="item-icon">⚙️</span>
-                      <span className="item-text">Profil Ayarları</span>
-                    </a>
-                    <a href="/favoriler" className="dropdown-item">
-                      <span className="item-icon">❤️</span>
-                      <span className="item-text">Favoriler</span>
-                    </a>
-                    <div className="dropdown-divider"></div>
-                    <a href="/cikis" className="dropdown-item logout">
-                      <span className="item-icon">🚪</span>
-                      <span className="item-text">Çıkış Yap</span>
-                    </a>
-                  </div>
-                </div>
-              </nav>
-            </header>
-          )}
+        <AuthProvider>
+          <div className="container">
+          {isClient && !isAdminPage && <Header />}
           {children}
-          {!isAdminPage && (
+          {isClient && !isAdminPage && (
             <footer className="footer">
               <div className="footer-content">
                 <div className="footer-left">
@@ -91,7 +42,8 @@ export default function RootLayout({ children }: { children: ReactNode }) {
               </div>
             </footer>
           )}
-        </div>
+          </div>
+        </AuthProvider>
       </body>
     </html>
   );

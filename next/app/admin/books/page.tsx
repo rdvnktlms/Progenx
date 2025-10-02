@@ -100,11 +100,13 @@ export default function BookManagement() {
   const router = useRouter();
 
   useEffect(() => {
-    const auth = localStorage.getItem('adminAuth');
-    if (!auth) {
-      router.push('/admin/login');
-    } else {
-      setIsAuthenticated(true);
+    if (typeof window !== 'undefined') {
+      const auth = localStorage.getItem('adminAuth');
+      if (!auth) {
+        router.push('/admin/login');
+      } else {
+        setIsAuthenticated(true);
+      }
     }
   }, [router]);
 
