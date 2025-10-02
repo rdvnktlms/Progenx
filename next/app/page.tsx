@@ -4,6 +4,8 @@ import { useState, useEffect } from 'react';
 export default function Page(){
   const [favorites, setFavorites] = useState<number[]>([]);
   const [wishlist, setWishlist] = useState<number[]>([]);
+  const [selectedCategory, setSelectedCategory] = useState<string>('Tümü');
+  const [selectedAgeGroup, setSelectedAgeGroup] = useState<string>('Tümü');
 
   // localStorage'dan favorileri ve istek listesini yükle
   useEffect(() => {
@@ -28,7 +30,9 @@ export default function Page(){
       currentPrice: "₺360,00",
       discount: "20%",
       link: "/kitaplar/satranc",
-      buyLink: "https://www.odtuyayincilik.com.tr/oyunlarla-satranc-233"
+      buyLink: "https://www.odtuyayincilik.com.tr/oyunlarla-satranc-233",
+      category: "Satranç",
+      ageGroup: "7-12 Yaş"
     },
     {
       id: 2,
@@ -39,7 +43,9 @@ export default function Page(){
       currentPrice: "₺156,00",
       discount: "20%",
       link: "/kitaplar/hava-olaylari",
-      buyLink: "https://www.odtuyayincilik.com.tr/hava-307"
+      buyLink: "https://www.odtuyayincilik.com.tr/hava-307",
+      category: "Bilim",
+      ageGroup: "7-12 Yaş"
     },
     {
       id: 3,
@@ -50,7 +56,9 @@ export default function Page(){
       currentPrice: "₺156,00",
       discount: "20%",
       link: "/kitaplar/benim-kucuk-deneylerim",
-      buyLink: "https://www.odtuyayincilik.com.tr/benim-kucuk-deneylerim-mekanik...-317"
+      buyLink: "https://www.odtuyayincilik.com.tr/benim-kucuk-deneylerim-mekanik...-317",
+      category: "Bilim",
+      ageGroup: "7-12 Yaş"
     },
     {
       id: 4,
@@ -61,7 +69,9 @@ export default function Page(){
       currentPrice: "₺280,00",
       discount: "20%",
       link: "/kitaplar/atalarimizdan-dersler",
-      buyLink: "https://www.odtuyayincilik.com.tr/atalarimizdan-dersler"
+      buyLink: "https://www.odtuyayincilik.com.tr/atalarimizdan-dersler",
+      category: "Tarih",
+      ageGroup: "7-12 Yaş"
     },
     {
       id: 5,
@@ -72,7 +82,9 @@ export default function Page(){
       currentPrice: "₺320,00",
       discount: "20%",
       link: "/kitaplar/tatilde-50-macera",
-      buyLink: "https://www.odtuyayincilik.com.tr/13-yasina-gelmeden-tatilde-yasanacak-50-macera-icin-kilavuz"
+      buyLink: "https://www.odtuyayincilik.com.tr/13-yasina-gelmeden-tatilde-yasanacak-50-macera-icin-kilavuz",
+      category: "Macera",
+      ageGroup: "7-12 Yaş"
     },
   ];
 
@@ -94,6 +106,17 @@ export default function Page(){
     localStorage.setItem('wishlist', JSON.stringify(newWishlist));
   };
 
+  // Kategorileri ve yaş gruplarını al
+  const categories = ['Tümü', ...Array.from(new Set(books.map(book => book.category)))];
+  const ageGroups = ['Tümü', ...Array.from(new Set(books.map(book => book.ageGroup)))];
+
+  // Filtrelenmiş kitapları al
+  const filteredBooks = books.filter(book => {
+    const categoryMatch = selectedCategory === 'Tümü' || book.category === selectedCategory;
+    const ageGroupMatch = selectedAgeGroup === 'Tümü' || book.ageGroup === selectedAgeGroup;
+    return categoryMatch && ageGroupMatch;
+  });
+
   return (
     <>
       <section className="hero-section">
@@ -108,9 +131,42 @@ export default function Page(){
           <h2>Popüler Kitaplar</h2>
           <p>Çocuklarınız için özenle seçilmiş eğitici kitaplar</p>
         </div>
+
+        {/* Filtreleme Arayüzü */}
+        <div className="filters-section">
+          <div className="filter-group">
+            <label htmlFor="category-filter">Kategori:</label>
+            <select 
+              id="category-filter"
+              value={selectedCategory} 
+              onChange={(e) => setSelectedCategory(e.target.value)}
+              className="filter-select"
+            >
+              {categories.map(category => (
+                <option key={category} value={category}>{category}</option>
+              ))}
+            </select>
+          </div>
+          <div className="filter-group">
+            <label htmlFor="age-filter">Yaş Grubu:</label>
+            <select 
+              id="age-filter"
+              value={selectedAgeGroup} 
+              onChange={(e) => setSelectedAgeGroup(e.target.value)}
+              className="filter-select"
+            >
+              {ageGroups.map(ageGroup => (
+                <option key={ageGroup} value={ageGroup}>{ageGroup}</option>
+              ))}
+            </select>
+          </div>
+          <div className="filter-results">
+            <span>{filteredBooks.length} kitap bulundu</span>
+          </div>
+        </div>
         
         <div className="books-grid">
-          {books.map(book => (
+          {filteredBooks.map(book => (
             <div key={book.id} className={`book-card ${book.comingSoon ? 'coming-soon' : ''}`}>
               <div className="book-cover">
                 <img src={book.cover} alt={book.title} />
@@ -139,6 +195,13 @@ export default function Page(){
               <div className="book-info">
                 <h3 className="book-title">{book.title}</h3>
                 <p className="book-author">{book.author}</p>
+                
+                {/* Kategori ve Yaş Grubu */}
+                <div className="book-meta">
+                  <span className="book-category">{book.category}</span>
+                  <span className="book-age-group">{book.ageGroup}</span>
+                </div>
+
                 {!book.comingSoon && (
                   <div className="price-info">
                     <span className="current-price">{book.currentPrice}</span>
