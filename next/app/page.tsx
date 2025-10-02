@@ -24,10 +24,11 @@ export default function Page(){
       title: "Oyunlarla Satranç",
       author: "Ozan ÇAPAN",
       cover: "/img/oyunlarla-satranc-4228-9.webp",
-      originalPrice: "₺200,00",
-      currentPrice: "₺160,00",
+      originalPrice: "₺450,00",
+      currentPrice: "₺360,00",
       discount: "20%",
-      link: "/kitaplar/satranc"
+      link: "/kitaplar/satranc",
+      buyLink: "https://www.odtuyayincilik.com.tr/oyunlarla-satranc-233"
     },
     {
       id: 2,
@@ -37,7 +38,8 @@ export default function Page(){
       originalPrice: "₺195,00",
       currentPrice: "₺156,00",
       discount: "20%",
-      link: "/kitaplar/hava-olaylari"
+      link: "/kitaplar/hava-olaylari",
+      buyLink: "https://www.odtuyayincilik.com.tr/hava-307"
     },
     {
       id: 3,
@@ -47,27 +49,30 @@ export default function Page(){
       originalPrice: "₺195,00",
       currentPrice: "₺156,00",
       discount: "20%",
-      link: "/kitaplar/benim-kucuk-deneylerim"
+      link: "/kitaplar/benim-kucuk-deneylerim",
+      buyLink: "https://www.odtuyayincilik.com.tr/benim-kucuk-deneylerim-mekanik...-317"
     },
     {
       id: 4,
       title: "Atalarımızdan Dersler",
       author: "Raksha Dave",
       cover: "/img/atalarımızdan dersler.jpg",
-      originalPrice: "₺195,00",
-      currentPrice: "₺156,00",
+      originalPrice: "₺350,00",
+      currentPrice: "₺280,00",
       discount: "20%",
-      link: "/kitaplar/atalarimizdan-dersler"
+      link: "/kitaplar/atalarimizdan-dersler",
+      buyLink: "https://www.odtuyayincilik.com.tr/atalarimizdan-dersler"
     },
     {
       id: 5,
       title: "13 Yaşına Gelmeden Tatilde Yaşanacak 50 Macera İçin Kılavuz",
       author: "P.D. BACCALARIO",
       cover: "/img/tatil kitabı.jpg",
-      originalPrice: "₺195,00",
-      currentPrice: "₺156,00",
+      originalPrice: "₺400,00",
+      currentPrice: "₺320,00",
       discount: "20%",
-      link: "/kitaplar/tatilde-50-macera"
+      link: "/kitaplar/tatilde-50-macera",
+      buyLink: "https://www.odtuyayincilik.com.tr/13-yasina-gelmeden-tatilde-yasanacak-50-macera-icin-kilavuz"
     },
   ];
 
@@ -143,6 +148,11 @@ export default function Page(){
                 <button 
                   className={`buy-button ${book.comingSoon ? 'coming-soon-btn' : ''}`}
                   disabled={book.comingSoon}
+                  onClick={() => {
+                    if (!book.comingSoon && book.buyLink) {
+                      window.open(book.buyLink, '_blank', 'noopener,noreferrer');
+                    }
+                  }}
                 >
                   {book.comingSoon ? 'Yakında' : 'Satın Al'}
                 </button>
