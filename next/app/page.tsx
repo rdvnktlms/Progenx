@@ -32,7 +32,8 @@ export default function Page(){
       link: "/kitaplar/satranc",
       buyLink: "https://www.odtuyayincilik.com.tr/oyunlarla-satranc-233",
       category: "Satranç",
-      ageGroup: "7-12 Yaş"
+      ageGroup: "7-12 Yaş",
+      comingSoon: false
     },
     {
       id: 2,
@@ -45,7 +46,8 @@ export default function Page(){
       link: "/kitaplar/hava-olaylari",
       buyLink: "https://www.odtuyayincilik.com.tr/hava-307",
       category: "Bilim",
-      ageGroup: "7-12 Yaş"
+      ageGroup: "7-12 Yaş",
+      comingSoon: false
     },
     {
       id: 3,
@@ -58,7 +60,8 @@ export default function Page(){
       link: "/kitaplar/benim-kucuk-deneylerim",
       buyLink: "https://www.odtuyayincilik.com.tr/benim-kucuk-deneylerim-mekanik...-317",
       category: "Bilim",
-      ageGroup: "7-12 Yaş"
+      ageGroup: "7-12 Yaş",
+      comingSoon: false
     },
     {
       id: 4,
@@ -71,7 +74,8 @@ export default function Page(){
       link: "/kitaplar/atalarimizdan-dersler",
       buyLink: "https://www.odtuyayincilik.com.tr/atalarimizdan-dersler",
       category: "Tarih",
-      ageGroup: "7-12 Yaş"
+      ageGroup: "7-12 Yaş",
+      comingSoon: false
     },
     {
       id: 5,
@@ -84,7 +88,8 @@ export default function Page(){
       link: "/kitaplar/tatilde-50-macera",
       buyLink: "https://www.odtuyayincilik.com.tr/13-yasina-gelmeden-tatilde-yasanacak-50-macera-icin-kilavuz",
       category: "Macera",
-      ageGroup: "7-12 Yaş"
+      ageGroup: "7-12 Yaş",
+      comingSoon: false
     },
   ];
 

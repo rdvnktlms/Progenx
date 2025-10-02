@@ -7,8 +7,10 @@ export default function RootLayout({ children }: { children: ReactNode }) {
   const [isAdminPage, setIsAdminPage] = useState(false);
 
   useEffect(() => {
-    const path = window.location.pathname;
-    setIsAdminPage(path.startsWith('/admin'));
+    if (typeof window !== 'undefined') {
+      const path = window.location.pathname;
+      setIsAdminPage(path.startsWith('/admin'));
+    }
   }, []);
   return (
     <html lang="tr">

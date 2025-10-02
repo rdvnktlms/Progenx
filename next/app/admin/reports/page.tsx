@@ -41,7 +41,7 @@ export default function ReportsPage() {
         { name: "Termometre", plays: 178, avgScore: 87 }
       ]
     },
-    engagement: {
+    analytics: {
       avgSessionTime: "12:34",
       bounceRate: "23%",
       returnVisitors: "67%",
@@ -87,7 +87,7 @@ export default function ReportsPage() {
       filename = 'kullanici-buyumesi.csv';
     } else if (type === 'Oyun') {
       csvContent = 'Sıra,Oyun Adı,Oynanma,Ortalama Skor\n';
-      reports.games.topGames.forEach((game, index) => {
+      reports.games.mostPlayedGames.forEach((game, index) => {
         csvContent += `${index + 1},"${game.name}",${game.plays},${game.avgScore}\n`;
       });
       filename = 'oyun-raporu.csv';
@@ -283,7 +283,7 @@ export default function ReportsPage() {
               </button>
             </div>
             <div className="chart-content">
-              {reports.engagement.favoriteCategories.map((category, index) => (
+              {reports.analytics.favoriteCategories.map((category, index) => (
                 <div key={category.category} className="category-item">
                   <div className="category-info">
                     <h4>{category.category}</h4>
@@ -310,21 +310,21 @@ export default function ReportsPage() {
               <div className="engagement-icon">⏱️</div>
               <div className="engagement-info">
                 <h4>Ortalama Oturum Süresi</h4>
-                <p>{reports.engagement.avgSessionTime}</p>
+                <p>{reports.analytics.avgSessionTime}</p>
               </div>
             </div>
             <div className="engagement-item">
               <div className="engagement-icon">📈</div>
               <div className="engagement-info">
                 <h4>Geri Dönüş Oranı</h4>
-                <p>{reports.engagement.returnVisitors}</p>
+                <p>{reports.analytics.returnVisitors}</p>
               </div>
             </div>
             <div className="engagement-item">
               <div className="engagement-icon">📉</div>
               <div className="engagement-info">
                 <h4>Çıkış Oranı</h4>
-                <p>{reports.engagement.bounceRate}</p>
+                <p>{reports.analytics.bounceRate}</p>
               </div>
             </div>
             <div className="engagement-item">

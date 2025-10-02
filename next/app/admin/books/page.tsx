@@ -128,7 +128,7 @@ export default function BookManagement() {
       if (file.type.startsWith('image/')) {
         const reader = new FileReader();
         reader.onload = (event) => {
-          const imageUrl = event.target.result;
+          const imageUrl = event.target.result as string;
           setNewBook(prev => ({ ...prev, cover: imageUrl }));
           setCoverPreview(imageUrl);
         };
@@ -145,7 +145,7 @@ export default function BookManagement() {
       if (file.type.startsWith('image/')) {
         const reader = new FileReader();
         reader.onload = (event) => {
-          const imageUrl = event.target.result;
+          const imageUrl = event.target.result as string;
           setNewBook(prev => ({ ...prev, cover: imageUrl }));
           setCoverPreview(imageUrl);
         };

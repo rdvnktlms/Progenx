@@ -100,12 +100,6 @@ export default function UserManagement() {
     alert(`Kullanıcı Detayları:\n\nAd: ${user.name}\nE-posta: ${user.email}\nOkunan Kitap: ${user.booksRead}\nOynanan Oyun: ${user.gamesPlayed}\nSon Aktivite: ${user.lastActivity}\nFavori Kategoriler: ${user.favoriteGenres.join(', ')}`);
   };
 
-  const toggleUserStatus = (id) => {
-    setUsers(users.map(user => 
-      user.id === id ? { ...user, status: user.status === 'active' ? 'inactive' : 'active' } : user
-    ));
-  };
-
   if (!isAuthenticated) {
     return <div className="loading">Yükleniyor...</div>;
   }
