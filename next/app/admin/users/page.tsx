@@ -96,6 +96,16 @@ export default function UserManagement() {
     }
   };
 
+  const viewUser = (user) => {
+    alert(`Kullanıcı Detayları:\n\nAd: ${user.name}\nE-posta: ${user.email}\nOkunan Kitap: ${user.booksRead}\nOynanan Oyun: ${user.gamesPlayed}\nSon Aktivite: ${user.lastActivity}\nFavori Kategoriler: ${user.favoriteGenres.join(', ')}`);
+  };
+
+  const toggleUserStatus = (id) => {
+    setUsers(users.map(user => 
+      user.id === id ? { ...user, status: user.status === 'active' ? 'inactive' : 'active' } : user
+    ));
+  };
+
   if (!isAuthenticated) {
     return <div className="loading">Yükleniyor...</div>;
   }
@@ -212,8 +222,8 @@ export default function UserManagement() {
                   </td>
                   <td>
                     <div className="action-buttons">
-                      <button className="view-btn">👁️</button>
-                      <button className="edit-btn">✏️</button>
+                      <button className="view-btn" onClick={() => viewUser(user)}>👁️</button>
+                      <button className="edit-btn" onClick={() => alert('Kullanıcı düzenleme özelliği yakında eklenecek!')}>✏️</button>
                       <button 
                         className="delete-btn"
                         onClick={() => deleteUser(user.id)}

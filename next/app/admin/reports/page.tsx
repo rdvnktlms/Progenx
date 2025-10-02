@@ -6,15 +6,15 @@ export default function ReportsPage() {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [selectedPeriod, setSelectedPeriod] = useState('month');
   const [reports, setReports] = useState({
-    sales: {
-      totalRevenue: 45680,
-      totalSales: 482,
-      topSellingBooks: [
-        { name: "Oyunlarla Satranç", sales: 156, revenue: 56160 },
-        { name: "Hava Olayları", sales: 98, revenue: 15288 },
-        { name: "Benim Küçük Deneylerim", sales: 87, revenue: 13572 },
-        { name: "Atalarımızdan Dersler", sales: 76, revenue: 21280 },
-        { name: "50 Macera", sales: 65, revenue: 20800 }
+    engagement: {
+      totalViews: 45680,
+      totalInteractions: 482,
+      topViewedBooks: [
+        { name: "Oyunlarla Satranç", views: 156, interactions: 2341 },
+        { name: "Hava Olayları", views: 98, interactions: 1892 },
+        { name: "Benim Küçük Deneylerim", views: 87, interactions: 1654 },
+        { name: "Atalarımızdan Dersler", views: 76, interactions: 1432 },
+        { name: "50 Macera", views: 65, interactions: 1287 }
       ]
     },
     users: {
@@ -70,7 +70,38 @@ export default function ReportsPage() {
   };
 
   const exportData = (type) => {
-    alert(`${type} verisi Excel olarak indiriliyor... (Demo)`);
+    let csvContent = '';
+    let filename = '';
+    
+    if (type === 'Etkileşim') {
+      csvContent = 'Sıra,Kitap Adı,Görüntüleme,Etkileşim\n';
+      reports.engagement.topViewedBooks.forEach((book, index) => {
+        csvContent += `${index + 1},"${book.name}",${book.views},${book.interactions}\n`;
+      });
+      filename = 'etkilesim-raporu.csv';
+    } else if (type === 'Kullanıcı') {
+      csvContent = 'Ay,Kullanıcı Sayısı\n';
+      reports.users.userGrowth.forEach(data => {
+        csvContent += `${data.month},${data.users}\n`;
+      });
+      filename = 'kullanici-buyumesi.csv';
+    } else if (type === 'Oyun') {
+      csvContent = 'Sıra,Oyun Adı,Oynanma,Ortalama Skor\n';
+      reports.games.topGames.forEach((game, index) => {
+        csvContent += `${index + 1},"${game.name}",${game.plays},${game.avgScore}\n`;
+      });
+      filename = 'oyun-raporu.csv';
+    }
+    
+    const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+    const link = document.createElement('a');
+    const url = URL.createObjectURL(blob);
+    link.setAttribute('href', url);
+    link.setAttribute('download', filename);
+    link.style.visibility = 'hidden';
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
   };
 
   if (!isAuthenticated) {
@@ -124,18 +155,18 @@ export default function ReportsPage() {
         {/* Key Metrics */}
         <div className="metrics-grid">
           <div className="metric-card">
-            <div className="metric-icon">💰</div>
+            <div className="metric-icon">👁️</div>
             <div className="metric-info">
-              <h3>₺{reports.sales.totalRevenue.toLocaleString()}</h3>
-              <p>Toplam Gelir</p>
+              <h3>{reports.engagement.totalViews.toLocaleString()}</h3>
+              <p>Toplam Görüntüleme</p>
               <span className="metric-change">+12% bu ay</span>
             </div>
           </div>
           <div className="metric-card">
-            <div className="metric-icon">📚</div>
+            <div className="metric-icon">🎯</div>
             <div className="metric-info">
-              <h3>{reports.sales.totalSales}</h3>
-              <p>Toplam Satış</p>
+              <h3>{reports.engagement.totalInteractions}</h3>
+              <p>Toplam Etkileşim</p>
               <span className="metric-change">+8% bu ay</span>
             </div>
           </div>
@@ -159,29 +190,29 @@ export default function ReportsPage() {
 
         {/* Charts Section */}
         <div className="charts-section">
-          {/* Sales Report */}
+          {/* Engagement Report */}
           <div className="chart-card">
             <div className="chart-header">
-              <h3>En Çok Satan Kitaplar</h3>
-              <button className="export-btn" onClick={() => exportData('Satış')}>
+              <h3>En Çok Görüntülenen Kitaplar</h3>
+              <button className="export-btn" onClick={() => exportData('Etkileşim')}>
                 📊 Excel
               </button>
             </div>
             <div className="chart-content">
-              {reports.sales.topSellingBooks.map((book, index) => (
+              {reports.engagement.topViewedBooks.map((book, index) => (
                 <div key={book.name} className="chart-item">
                   <div className="item-rank">#{index + 1}</div>
                   <div className="item-info">
                     <h4>{book.name}</h4>
                     <div className="item-stats">
-                      <span>📚 {book.sales} satış</span>
-                      <span>💰 ₺{book.revenue.toLocaleString()}</span>
+                      <span>👁️ {book.views} görüntüleme</span>
+                      <span>🎯 {book.interactions} etkileşim</span>
                     </div>
                   </div>
                   <div className="item-bar">
                     <div 
                       className="bar-fill" 
-                      style={{ width: `${(book.sales / 156) * 100}%` }}
+                      style={{ width: `${(book.views / 156) * 100}%` }}
                     ></div>
                   </div>
                 </div>

@@ -94,6 +94,9 @@ export default function BookManagement() {
     buyLink: '',
     cover: ''
   });
+
+  const [dragActive, setDragActive] = useState(false);
+  const [coverPreview, setCoverPreview] = useState('');
   const router = useRouter();
 
   useEffect(() => {
@@ -104,6 +107,54 @@ export default function BookManagement() {
       setIsAuthenticated(true);
     }
   }, [router]);
+
+  const handleDrag = (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+    if (e.type === "dragenter" || e.type === "dragover") {
+      setDragActive(true);
+    } else if (e.type === "dragleave") {
+      setDragActive(false);
+    }
+  };
+
+  const handleDrop = (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+    setDragActive(false);
+    
+    if (e.dataTransfer.files && e.dataTransfer.files[0]) {
+      const file = e.dataTransfer.files[0];
+      if (file.type.startsWith('image/')) {
+        const reader = new FileReader();
+        reader.onload = (event) => {
+          const imageUrl = event.target.result;
+          setNewBook(prev => ({ ...prev, cover: imageUrl }));
+          setCoverPreview(imageUrl);
+        };
+        reader.readAsDataURL(file);
+      } else {
+        alert('Lütfen sadece resim dosyası yükleyin!');
+      }
+    }
+  };
+
+  const handleFileInput = (e) => {
+    if (e.target.files && e.target.files[0]) {
+      const file = e.target.files[0];
+      if (file.type.startsWith('image/')) {
+        const reader = new FileReader();
+        reader.onload = (event) => {
+          const imageUrl = event.target.result;
+          setNewBook(prev => ({ ...prev, cover: imageUrl }));
+          setCoverPreview(imageUrl);
+        };
+        reader.readAsDataURL(file);
+      } else {
+        alert('Lütfen sadece resim dosyası yükleyin!');
+      }
+    }
+  };
 
   const handleAddBook = () => {
     const book = {
@@ -126,6 +177,7 @@ export default function BookManagement() {
       buyLink: '',
       cover: ''
     });
+    setCoverPreview('');
   };
 
   const handleEditBook = (book) => {
@@ -344,13 +396,41 @@ export default function BookManagement() {
                   />
                 </div>
                 <div className="form-group">
-                  <label>Kapak Resmi URL:</label>
-                  <input 
-                    type="url" 
-                    value={newBook.cover}
-                    onChange={(e) => setNewBook(prev => ({ ...prev, cover: e.target.value }))}
-                    placeholder="/img/kitap-adi.jpg"
-                  />
+                  <label>Kapak Resmi:</label>
+                  <div 
+                    className={`file-upload-area ${dragActive ? 'drag-active' : ''}`}
+                    onDragEnter={handleDrag}
+                    onDragLeave={handleDrag}
+                    onDragOver={handleDrag}
+                    onDrop={handleDrop}
+                  >
+                    {coverPreview ? (
+                      <div className="cover-preview">
+                        <img src={coverPreview} alt="Kapak Önizleme" />
+                        <button 
+                          type="button"
+                          className="remove-cover"
+                          onClick={() => {
+                            setCoverPreview('');
+                            setNewBook(prev => ({ ...prev, cover: '' }));
+                          }}
+                        >
+                          ✕
+                        </button>
+                      </div>
+                    ) : (
+                      <div className="upload-placeholder">
+                        <div className="upload-icon">📁</div>
+                        <p>Resmi buraya sürükleyin veya tıklayın</p>
+                        <input 
+                          type="file" 
+                          accept="image/*"
+                          onChange={handleFileInput}
+                          className="file-input"
+                        />
+                      </div>
+                    )}
+                  </div>
                 </div>
               </div>
               <div className="modal-footer">
