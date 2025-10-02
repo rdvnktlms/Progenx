@@ -13,27 +13,39 @@ export default function ProfilPage() {
   const settings = [
     {
       id: 1,
-      title: "Bildirimler",
-      description: "E-posta ve push bildirimleri",
+      title: "E-posta Bildirimleri",
+      description: "Yeni kitap önerileri ve güncellemeler",
       enabled: true
     },
     {
       id: 2,
-      title: "Gizlilik",
-      description: "Hesap gizlilik ayarları",
-      enabled: true
+      title: "Push Bildirimleri",
+      description: "Tarayıcı bildirimleri",
+      enabled: false
     },
     {
       id: 3,
-      title: "Dil",
-      description: "Arayüz dili",
-      enabled: false
+      title: "Okuma Hatırlatıcıları",
+      description: "Günlük okuma hatırlatmaları",
+      enabled: true
     },
     {
       id: 4,
-      title: "Tema",
-      description: "Koyu/Açık tema",
+      title: "İndirim Bildirimleri",
+      description: "Kitap indirimleri ve kampanyalar",
+      enabled: true
+    },
+    {
+      id: 5,
+      title: "Sosyal Özellikler",
+      description: "Arkadaş aktiviteleri ve paylaşımlar",
       enabled: false
+    },
+    {
+      id: 6,
+      title: "Haftalık Rapor",
+      description: "Okuma istatistikleri özeti",
+      enabled: true
     }
   ];
 
