@@ -1,5 +1,6 @@
 "use client";
 import { useEffect, useRef, useState } from "react";
+import AuthGuard from "../../utils/authGuard";
 
 interface WaterParticle {
   id: number;
@@ -9,7 +10,7 @@ interface WaterParticle {
   isAnimating: boolean;
 }
 
-export default function YagmurBulutuOyunu() {
+function YagmurBulutuOyunu() {
   const [particles, setParticles] = useState<WaterParticle[]>([]);
   const [currentStep, setCurrentStep] = useState<'evaporation' | 'condensation' | 'precipitation'>('evaporation');
   const [gameMessage, setGameMessage] = useState("Güneş ışığı ile deniz suyunu buharlaştır!");
@@ -313,5 +314,13 @@ export default function YagmurBulutuOyunu() {
       <audio ref={aSuccess} src="/audio/success-sound.mp3" preload="auto"/>
       <audio ref={aWin} src="/audio/win-sound.mp3" preload="auto"/>
     </>
+  );
+}
+
+export default function YagmurBulutuPage() {
+  return (
+    <AuthGuard requiredBookId="hava-olaylari" gameId="yagmur-bulutu">
+      <YagmurBulutuOyunu />
+    </AuthGuard>
   );
 }

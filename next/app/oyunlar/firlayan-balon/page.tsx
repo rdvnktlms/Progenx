@@ -1,5 +1,6 @@
 "use client";
 import { useEffect, useRef, useState } from "react";
+import AuthGuard from "../../utils/authGuard";
 
 interface ExperimentStep {
   id: number;
@@ -9,7 +10,7 @@ interface ExperimentStep {
   materials: string[];
 }
 
-export default function FirlayanBalonOyunu() {
+function FirlayanBalonOyunu() {
   const [currentStep, setCurrentStep] = useState(0);
   const [steps, setSteps] = useState<ExperimentStep[]>([
     {
@@ -328,5 +329,13 @@ export default function FirlayanBalonOyunu() {
       <audio ref={aLaunch} src="/audio/launch-sound.mp3" preload="auto"/>
       <audio ref={aSuccess} src="/audio/success-sound.mp3" preload="auto"/>
     </>
+  );
+}
+
+export default function FirlayanBalonPage() {
+  return (
+    <AuthGuard requiredBookId="benim-kucuk-deneylerim" gameId="firlayan-balon">
+      <FirlayanBalonOyunu />
+    </AuthGuard>
   );
 }

@@ -3,7 +3,7 @@ import { useState, useEffect } from 'react';
 import { useAuth } from '../../contexts/AuthContext';
 import { verifyKey, getBookTitle, isValidKeyFormat } from '../../utils/keySystem';
 
-export default function BenimKucukDeneylerimPage(){
+export default function OyunlarlaSatrancPage(){
   const { user } = useAuth();
   const [keyInput, setKeyInput] = useState('');
   const [isVerifying, setIsVerifying] = useState(false);
@@ -11,7 +11,7 @@ export default function BenimKucukDeneylerimPage(){
   const [hasBookAccess, setHasBookAccess] = useState(false);
   const [isClient, setIsClient] = useState(false);
 
-  const bookId = 'benim-kucuk-deneylerim';
+  const bookId = 'oyunlarla-satranc';
 
   useEffect(() => {
     setIsClient(true);
@@ -81,22 +81,22 @@ export default function BenimKucukDeneylerimPage(){
   return (
     <>
       <div className="hero">
-        <h2>🔬 Benim Küçük Deneylerim</h2>
-        <p>Eğlenceli deneyler ve oyunlarla bilimi keşfedin!</p>
+        <h2>♟️ Oyunlarla Satranç</h2>
+        <p>Koyunlar ve Kurt, Hırsız ve Polis ile eğitici mini oyunlar.</p>
       </div>
       
       <div className="book-info-section">
         <div className="book-cover-large">
-          <img src="/img/benim-kucuk-deneylerim-mekanik...-5-4bcd.jpg" alt="Benim Küçük Deneylerim - Melanie PEREZ" className="book-cover-image" />
-          <h3>Benim Küçük Deneylerim</h3>
-          <p className="author">Melanie PEREZ</p>
+          <img src="/img/oyunlarla-satranc-4228-9.webp" alt="Oyunlarla Satranç - Ozan ÇAPAN" className="book-cover-image" />
+          <h3>Oyunlarla Satranç</h3>
+          <p className="author">Ozan ÇAPAN</p>
         </div>
         <div className="book-description">
-          <p>Mekanik prensipleri eğlenceli deneylerle öğren! Balon, gemi ve köprü deneyleriyle bilimin sırlarını keşfet.</p>
+          <p>Satranç taşlarını eğlenceli oyunlarla öğren! Koyunlar ve Kurt, Hırsız ve Polis gibi mini oyunlarla satranç kurallarını keşfet.</p>
           <div className="book-features">
-            <span className="feature">🔬 Bilim Deneyleri</span>
-            <span className="feature">🎈 Eğlenceli Aktiviteler</span>
-            <span className="feature">👶 Çocuk Dostu</span>
+            <span className="feature">♟️ Satranç Öğrenimi</span>
+            <span className="feature">🎮 Eğlenceli Oyunlar</span>
+            <span className="feature">🧠 Stratejik Düşünme</span>
           </div>
         </div>
       </div>
@@ -143,29 +143,22 @@ export default function BenimKucukDeneylerimPage(){
           </div>
         </div>
       )}
-
-      <div className="experiments-section">
-        <h2>🧪 Bilim Deneyleri</h2>
-        <div className="experiments-grid">
-          <div className="experiment-card">
-            <div className="experiment-icon">🎈</div>
-            <h3>Fırlayan Balon <span className="page-number">Sayfa 8</span></h3>
-            <p>Balon ve ip ile eğlenceli bir deney yapın!</p>
-            <a href="/oyunlar/firlayan-balon" className="play-btn">Dene</a>
+      
+      <div className="games-section">
+        <h2>🎮 Satranç Oyunları</h2>
+        <div className="games-grid">
+          <div className="game-card">
+            <div className="game-icon">👮🏃</div>
+            <h3>Hırsız & Polis <span className="page-number">Sayfa 49</span></h3>
+            <p>Polis olarak hırsızları yakalayın veya hırsız olarak kaçmaya çalışın!</p>
+            <a href="/oyunlar/hirsiz-polis" className="play-btn">Oyna</a>
           </div>
           
-          <div className="experiment-card">
-            <div className="experiment-icon">🚢</div>
-            <h3>Su Gemisi <span className="page-number">Sayfa 10</span></h3>
-            <p>Su ile çalışan bir gemi yapın!</p>
-            <a href="/oyunlar/su-gemisi" className="play-btn">Dene</a>
-          </div>
-          
-          <div className="experiment-card">
-            <div className="experiment-icon">🌉</div>
-            <h3>Asma Köprü <span className="page-number">Sayfa 18</span></h3>
-            <p>Kendi asma köprünüzü inşa edin!</p>
-            <a href="/oyunlar/asma-kopru" className="play-btn">Dene</a>
+          <div className="game-card">
+            <div className="game-icon">🐑🐺</div>
+            <h3>Kurt vs Koyunlar <span className="page-number">Sayfa 59</span></h3>
+            <p>1 Kurt vs 8 Koyun – Koyunlar en üste ulaşmaya çalışırken kurdu yakalamaya çalışın!</p>
+            <a href="/oyunlar/kurt-vs-koyunlar" className="play-btn">Oyna</a>
           </div>
         </div>
       </div>

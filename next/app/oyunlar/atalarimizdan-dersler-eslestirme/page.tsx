@@ -1,5 +1,6 @@
 "use client";
 import { useState, useEffect } from 'react';
+import AuthGuard from "../../utils/authGuard";
 
 interface Topic {
   id: string;
@@ -21,7 +22,7 @@ interface GameStats {
   timeElapsed: number;
 }
 
-export default function EslestirmeOyunu() {
+function EslestirmeOyunu() {
   const [topics, setTopics] = useState<Topic[]>([
     {
       id: "avustralya",
@@ -372,5 +373,13 @@ export default function EslestirmeOyunu() {
         </div>
       )}
     </div>
+  );
+}
+
+export default function EslestirmePage() {
+  return (
+    <AuthGuard requiredBookId="atalarimizdan-dersler" gameId="atalarimizdan-dersler-eslestirme">
+      <EslestirmeOyunu />
+    </AuthGuard>
   );
 }

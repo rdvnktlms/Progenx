@@ -1,9 +1,7 @@
 "use client";
 import { useState, useEffect } from 'react';
-import { useRouter } from 'next/navigation';
 
 export default function GameManagement() {
-  const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [games, setGames] = useState([
     {
       id: 1,
@@ -148,18 +146,6 @@ export default function GameManagement() {
     difficulty: '',
     description: ''
   });
-  const router = useRouter();
-
-  useEffect(() => {
-    if (typeof window !== 'undefined') {
-      const auth = localStorage.getItem('adminAuth');
-      if (!auth) {
-        router.push('/admin/login');
-      } else {
-        setIsAuthenticated(true);
-      }
-    }
-  }, [router]);
 
   const handleAddGame = () => {
     const game = {
@@ -205,297 +191,777 @@ export default function GameManagement() {
     ));
   };
 
-  if (!isAuthenticated) {
-    return <div className="loading">Yükleniyor...</div>;
-  }
-
   return (
-    <div className="admin-dashboard">
-      {/* Header */}
-      <header className="admin-header">
-        <div className="header-left">
-          <img src="/img/icon.png" alt="ODTÜ Yayıncılık" className="header-logo" />
-          <h1>Oyun Yönetimi</h1>
-        </div>
-        <div className="header-right">
-          <span className="admin-welcome">Hoş geldiniz, Admin</span>
-          <button onClick={() => router.push('/admin/login')} className="logout-btn">Çıkış Yap</button>
-        </div>
-      </header>
+    <div style={{
+      padding: '20px',
+      background: '#f8f9fa',
+      minHeight: '100vh'
+    }}>
+      <div style={{
+        display: 'flex',
+        justifyContent: 'space-between',
+        alignItems: 'center',
+        marginBottom: '30px'
+      }}>
+        <h1 style={{
+          fontSize: '2rem',
+          fontWeight: '700',
+          color: '#1f2937',
+          margin: '0'
+        }}>🎮 Oyun Yönetimi</h1>
+        <button 
+          style={{
+            background: 'linear-gradient(135deg, #667eea, #764ba2)',
+            color: 'white',
+            border: 'none',
+            padding: '12px 20px',
+            borderRadius: '8px',
+            fontSize: '1rem',
+            fontWeight: '500',
+            cursor: 'pointer',
+            transition: 'transform 0.2s ease'
+          }}
+          onClick={() => setShowAddModal(true)}
+        >
+          ➕ Yeni Oyun Ekle
+        </button>
+      </div>
 
-      {/* Navigation */}
-      <nav className="admin-nav">
-        <a href="/admin/dashboard" className="nav-item">📊 Dashboard</a>
-        <a href="/admin/books" className="nav-item">📚 Kitaplar</a>
-        <a href="/admin/users" className="nav-item">👥 Kullanıcılar</a>
-        <a href="/admin/games" className="nav-item active">🎮 Oyunlar</a>
-        <a href="/admin/reports" className="nav-item">📈 Raporlar</a>
-      </nav>
-
-      {/* Main Content */}
-      <main className="admin-content">
-        <div className="page-header">
-          <h2>Oyun Yönetimi</h2>
-          <button 
-            className="add-btn"
-            onClick={() => setShowAddModal(true)}
-          >
-            ➕ Yeni Oyun Ekle
-          </button>
-        </div>
-
-        {/* Game Stats */}
-        <div className="game-stats-grid">
-          <div className="stat-card">
-            <div className="stat-icon">🎮</div>
-            <div className="stat-info">
-              <h3>{games.length}</h3>
-              <p>Toplam Oyun</p>
-            </div>
-          </div>
-          <div className="stat-card">
-            <div className="stat-icon">👥</div>
-            <div className="stat-info">
-              <h3>{games.reduce((sum, game) => sum + game.playCount, 0)}</h3>
-              <p>Toplam Oynanma</p>
-            </div>
-          </div>
-          <div className="stat-card">
-            <div className="stat-icon">⭐</div>
-            <div className="stat-info">
-              <h3>{Math.round(games.reduce((sum, game) => sum + game.avgScore, 0) / games.length)}</h3>
-              <p>Ortalama Skor</p>
-            </div>
-          </div>
-          <div className="stat-card">
-            <div className="stat-icon">🔥</div>
-            <div className="stat-info">
-              <h3>{games.filter(g => g.status === 'active').length}</h3>
-              <p>Aktif Oyun</p>
-            </div>
+      {/* Game Stats */}
+      <div style={{
+        display: 'grid',
+        gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))',
+        gap: '20px',
+        marginBottom: '30px'
+      }}>
+        <div style={{
+          background: 'white',
+          borderRadius: '12px',
+          padding: '20px',
+          boxShadow: '0 4px 6px rgba(0, 0, 0, 0.05)',
+          border: '1px solid #e5e7eb',
+          display: 'flex',
+          alignItems: 'center',
+          gap: '12px'
+        }}>
+          <div style={{
+            width: '40px',
+            height: '40px',
+            background: 'linear-gradient(135deg, #667eea, #764ba2)',
+            borderRadius: '8px',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            fontSize: '1.2rem'
+          }}>🎮</div>
+          <div>
+            <div style={{
+              fontSize: '1.5rem',
+              fontWeight: '700',
+              color: '#1f2937'
+            }}>{games.length}</div>
+            <div style={{
+              fontSize: '0.9rem',
+              color: '#6b7280'
+            }}>Toplam Oyun</div>
           </div>
         </div>
 
-        {/* Games Table */}
-        <div className="games-table-container">
-          <table className="games-table">
-            <thead>
-              <tr>
-                <th>Oyun Adı</th>
-                <th>Kitap</th>
-                <th>Kategori</th>
-                <th>Zorluk</th>
-                <th>İstatistikler</th>
-                <th>Durum</th>
-                <th>İşlemler</th>
-              </tr>
-            </thead>
-            <tbody>
-              {games.map(game => (
-                <tr key={game.id}>
-                  <td>
-                    <div className="game-info">
-                      <strong>{game.name}</strong>
-                      <p className="game-description">{game.description}</p>
-                    </div>
-                  </td>
-                  <td>
-                    <span className="book-badge">{game.book}</span>
-                  </td>
-                  <td>
-                    <span className="category-badge">{game.category}</span>
-                  </td>
-                  <td>
-                    <span className={`difficulty-badge ${game.difficulty.toLowerCase()}`}>
-                      {game.difficulty}
-                    </span>
-                  </td>
-                  <td>
-                    <div className="game-stats">
-                      <span>🎮 {game.playCount} oynanma</span>
-                      <span>⭐ {game.avgScore} ortalama</span>
-                    </div>
-                  </td>
-                  <td>
+        <div style={{
+          background: 'white',
+          borderRadius: '12px',
+          padding: '20px',
+          boxShadow: '0 4px 6px rgba(0, 0, 0, 0.05)',
+          border: '1px solid #e5e7eb',
+          display: 'flex',
+          alignItems: 'center',
+          gap: '12px'
+        }}>
+          <div style={{
+            width: '40px',
+            height: '40px',
+            background: 'linear-gradient(135deg, #667eea, #764ba2)',
+            borderRadius: '8px',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            fontSize: '1.2rem'
+          }}>👥</div>
+          <div>
+            <div style={{
+              fontSize: '1.5rem',
+              fontWeight: '700',
+              color: '#1f2937'
+            }}>{games.reduce((sum, game) => sum + game.playCount, 0)}</div>
+            <div style={{
+              fontSize: '0.9rem',
+              color: '#6b7280'
+            }}>Toplam Oynanma</div>
+          </div>
+        </div>
+
+        <div style={{
+          background: 'white',
+          borderRadius: '12px',
+          padding: '20px',
+          boxShadow: '0 4px 6px rgba(0, 0, 0, 0.05)',
+          border: '1px solid #e5e7eb',
+          display: 'flex',
+          alignItems: 'center',
+          gap: '12px'
+        }}>
+          <div style={{
+            width: '40px',
+            height: '40px',
+            background: 'linear-gradient(135deg, #667eea, #764ba2)',
+            borderRadius: '8px',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            fontSize: '1.2rem'
+          }}>⭐</div>
+          <div>
+            <div style={{
+              fontSize: '1.5rem',
+              fontWeight: '700',
+              color: '#1f2937'
+            }}>{Math.round(games.reduce((sum, game) => sum + game.avgScore, 0) / games.length)}</div>
+            <div style={{
+              fontSize: '0.9rem',
+              color: '#6b7280'
+            }}>Ortalama Skor</div>
+          </div>
+        </div>
+
+        <div style={{
+          background: 'white',
+          borderRadius: '12px',
+          padding: '20px',
+          boxShadow: '0 4px 6px rgba(0, 0, 0, 0.05)',
+          border: '1px solid #e5e7eb',
+          display: 'flex',
+          alignItems: 'center',
+          gap: '12px'
+        }}>
+          <div style={{
+            width: '40px',
+            height: '40px',
+            background: 'linear-gradient(135deg, #667eea, #764ba2)',
+            borderRadius: '8px',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            fontSize: '1.2rem'
+          }}>🔥</div>
+          <div>
+            <div style={{
+              fontSize: '1.5rem',
+              fontWeight: '700',
+              color: '#1f2937'
+            }}>{games.filter(g => g.status === 'active').length}</div>
+            <div style={{
+              fontSize: '0.9rem',
+              color: '#6b7280'
+            }}>Aktif Oyun</div>
+          </div>
+        </div>
+      </div>
+
+      {/* Games Table */}
+      <div style={{
+        background: 'white',
+        borderRadius: '12px',
+        padding: '20px',
+        boxShadow: '0 4px 6px rgba(0, 0, 0, 0.05)',
+        border: '1px solid #e5e7eb',
+        overflow: 'auto'
+      }}>
+        <table style={{
+          width: '100%',
+          borderCollapse: 'collapse'
+        }}>
+          <thead>
+            <tr style={{
+              borderBottom: '2px solid #e5e7eb'
+            }}>
+              <th style={{
+                padding: '12px',
+                textAlign: 'left',
+                fontWeight: '600',
+                color: '#374151'
+              }}>Oyun Adı</th>
+              <th style={{
+                padding: '12px',
+                textAlign: 'left',
+                fontWeight: '600',
+                color: '#374151'
+              }}>Kitap</th>
+              <th style={{
+                padding: '12px',
+                textAlign: 'left',
+                fontWeight: '600',
+                color: '#374151'
+              }}>Kategori</th>
+              <th style={{
+                padding: '12px',
+                textAlign: 'left',
+                fontWeight: '600',
+                color: '#374151'
+              }}>Zorluk</th>
+              <th style={{
+                padding: '12px',
+                textAlign: 'left',
+                fontWeight: '600',
+                color: '#374151'
+              }}>İstatistikler</th>
+              <th style={{
+                padding: '12px',
+                textAlign: 'left',
+                fontWeight: '600',
+                color: '#374151'
+              }}>Durum</th>
+              <th style={{
+                padding: '12px',
+                textAlign: 'left',
+                fontWeight: '600',
+                color: '#374151'
+              }}>İşlemler</th>
+            </tr>
+          </thead>
+          <tbody>
+            {games.map(game => (
+              <tr key={game.id} style={{
+                borderBottom: '1px solid #f3f4f6'
+              }}>
+                <td style={{ padding: '12px' }}>
+                  <div>
+                    <div style={{
+                      fontWeight: '600',
+                      color: '#1f2937',
+                      marginBottom: '4px'
+                    }}>{game.name}</div>
+                    <div style={{
+                      fontSize: '0.8rem',
+                      color: '#6b7280'
+                    }}>{game.description}</div>
+                  </div>
+                </td>
+                <td style={{ padding: '12px' }}>
+                  <span style={{
+                    background: '#dbeafe',
+                    color: '#1e40af',
+                    padding: '4px 8px',
+                    borderRadius: '4px',
+                    fontSize: '0.8rem',
+                    fontWeight: '500'
+                  }}>{game.book}</span>
+                </td>
+                <td style={{ padding: '12px' }}>
+                  <span style={{
+                    background: '#f3e8ff',
+                    color: '#7c3aed',
+                    padding: '4px 8px',
+                    borderRadius: '4px',
+                    fontSize: '0.8rem',
+                    fontWeight: '500'
+                  }}>{game.category}</span>
+                </td>
+                <td style={{ padding: '12px' }}>
+                  <span style={{
+                    background: game.difficulty === 'Kolay' ? '#dcfce7' : 
+                               game.difficulty === 'Orta' ? '#fef3c7' : '#fee2e2',
+                    color: game.difficulty === 'Kolay' ? '#166534' : 
+                           game.difficulty === 'Orta' ? '#92400e' : '#dc2626',
+                    padding: '4px 8px',
+                    borderRadius: '4px',
+                    fontSize: '0.8rem',
+                    fontWeight: '500'
+                  }}>{game.difficulty}</span>
+                </td>
+                <td style={{ padding: '12px' }}>
+                  <div style={{
+                    fontSize: '0.8rem',
+                    color: '#6b7280'
+                  }}>
+                    <div>🎮 {game.playCount} oynanma</div>
+                    <div>⭐ {game.avgScore} ortalama</div>
+                  </div>
+                </td>
+                <td style={{ padding: '12px' }}>
+                  <button 
+                    style={{
+                      background: game.status === 'active' ? '#dcfce7' : '#fee2e2',
+                      color: game.status === 'active' ? '#166534' : '#dc2626',
+                      border: 'none',
+                      padding: '4px 8px',
+                      borderRadius: '4px',
+                      fontSize: '0.8rem',
+                      fontWeight: '500',
+                      cursor: 'pointer'
+                    }}
+                    onClick={() => toggleGameStatus(game.id)}
+                  >
+                    {game.status === 'active' ? 'Aktif' : 'Pasif'}
+                  </button>
+                </td>
+                <td style={{ padding: '12px' }}>
+                  <div style={{
+                    display: 'flex',
+                    gap: '8px'
+                  }}>
+                    <button style={{
+                      background: '#dbeafe',
+                      color: '#1e40af',
+                      border: 'none',
+                      padding: '6px',
+                      borderRadius: '4px',
+                      cursor: 'pointer',
+                      fontSize: '0.8rem'
+                    }}>▶️</button>
                     <button 
-                      className={`status-btn ${game.status}`}
-                      onClick={() => toggleGameStatus(game.id)}
+                      style={{
+                        background: '#fef3c7',
+                        color: '#92400e',
+                        border: 'none',
+                        padding: '6px',
+                        borderRadius: '4px',
+                        cursor: 'pointer',
+                        fontSize: '0.8rem'
+                      }}
+                      onClick={() => handleEditGame(game)}
                     >
-                      {game.status === 'active' ? 'Aktif' : 'Pasif'}
+                      ✏️
                     </button>
-                  </td>
-                  <td>
-                    <div className="action-buttons">
-                      <button className="play-btn">▶️</button>
-                      <button 
-                        className="edit-btn"
-                        onClick={() => handleEditGame(game)}
-                      >
-                        ✏️
-                      </button>
-                      <button 
-                        className="delete-btn"
-                        onClick={() => handleDeleteGame(game.id)}
-                      >
-                        🗑️
-                      </button>
-                    </div>
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
+                    <button 
+                      style={{
+                        background: '#fee2e2',
+                        color: '#dc2626',
+                        border: 'none',
+                        padding: '6px',
+                        borderRadius: '4px',
+                        cursor: 'pointer',
+                        fontSize: '0.8rem'
+                      }}
+                      onClick={() => handleDeleteGame(game.id)}
+                    >
+                      🗑️
+                    </button>
+                  </div>
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+
+      {/* Add Game Modal */}
+      {showAddModal && (
+        <div style={{
+          position: 'fixed',
+          top: 0,
+          left: 0,
+          right: 0,
+          bottom: 0,
+          background: 'rgba(0, 0, 0, 0.5)',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          zIndex: 1000
+        }}>
+          <div style={{
+            background: 'white',
+            borderRadius: '12px',
+            padding: '24px',
+            width: '90%',
+            maxWidth: '500px',
+            maxHeight: '90vh',
+            overflow: 'auto'
+          }}>
+            <div style={{
+              display: 'flex',
+              justifyContent: 'space-between',
+              alignItems: 'center',
+              marginBottom: '20px'
+            }}>
+              <h3 style={{
+                fontSize: '1.2rem',
+                fontWeight: '600',
+                color: '#1f2937',
+                margin: '0'
+              }}>Yeni Oyun Ekle</h3>
+              <button 
+                style={{
+                  background: 'none',
+                  border: 'none',
+                  fontSize: '1.5rem',
+                  cursor: 'pointer',
+                  color: '#6b7280'
+                }}
+                onClick={() => setShowAddModal(false)}
+              >×</button>
+            </div>
+            <div style={{
+              display: 'flex',
+              flexDirection: 'column',
+              gap: '16px'
+            }}>
+              <div>
+                <label style={{
+                  display: 'block',
+                  marginBottom: '8px',
+                  fontWeight: '500',
+                  color: '#374151'
+                }}>Oyun Adı:</label>
+                <input 
+                  type="text" 
+                  value={newGame.name}
+                  onChange={(e) => setNewGame(prev => ({ ...prev, name: e.target.value }))}
+                  style={{
+                    width: '100%',
+                    padding: '8px 12px',
+                    border: '1px solid #d1d5db',
+                    borderRadius: '6px',
+                    fontSize: '0.9rem'
+                  }}
+                />
+              </div>
+              <div>
+                <label style={{
+                  display: 'block',
+                  marginBottom: '8px',
+                  fontWeight: '500',
+                  color: '#374151'
+                }}>Kitap:</label>
+                <select 
+                  value={newGame.book}
+                  onChange={(e) => setNewGame(prev => ({ ...prev, book: e.target.value }))}
+                  style={{
+                    width: '100%',
+                    padding: '8px 12px',
+                    border: '1px solid #d1d5db',
+                    borderRadius: '6px',
+                    fontSize: '0.9rem'
+                  }}
+                >
+                  <option value="">Seçiniz</option>
+                  <option value="Benim Küçük Deneylerim">Benim Küçük Deneylerim</option>
+                  <option value="Hava Olayları">Hava Olayları</option>
+                  <option value="50 Macera">50 Macera</option>
+                  <option value="Atalarımızdan Dersler">Atalarımızdan Dersler</option>
+                  <option value="Oyunlarla Satranç">Oyunlarla Satranç</option>
+                </select>
+              </div>
+              <div>
+                <label style={{
+                  display: 'block',
+                  marginBottom: '8px',
+                  fontWeight: '500',
+                  color: '#374151'
+                }}>Kategori:</label>
+                <select 
+                  value={newGame.category}
+                  onChange={(e) => setNewGame(prev => ({ ...prev, category: e.target.value }))}
+                  style={{
+                    width: '100%',
+                    padding: '8px 12px',
+                    border: '1px solid #d1d5db',
+                    borderRadius: '6px',
+                    fontSize: '0.9rem'
+                  }}
+                >
+                  <option value="">Seçiniz</option>
+                  <option value="Strateji">Strateji</option>
+                  <option value="Bilim">Bilim</option>
+                  <option value="Fizik">Fizik</option>
+                  <option value="Planlama">Planlama</option>
+                  <option value="Yaratıcılık">Yaratıcılık</option>
+                  <option value="Simülasyon">Simülasyon</option>
+                  <option value="Mühendislik">Mühendislik</option>
+                </select>
+              </div>
+              <div>
+                <label style={{
+                  display: 'block',
+                  marginBottom: '8px',
+                  fontWeight: '500',
+                  color: '#374151'
+                }}>Zorluk:</label>
+                <select 
+                  value={newGame.difficulty}
+                  onChange={(e) => setNewGame(prev => ({ ...prev, difficulty: e.target.value }))}
+                  style={{
+                    width: '100%',
+                    padding: '8px 12px',
+                    border: '1px solid #d1d5db',
+                    borderRadius: '6px',
+                    fontSize: '0.9rem'
+                  }}
+                >
+                  <option value="">Seçiniz</option>
+                  <option value="Kolay">Kolay</option>
+                  <option value="Orta">Orta</option>
+                  <option value="Zor">Zor</option>
+                </select>
+              </div>
+              <div>
+                <label style={{
+                  display: 'block',
+                  marginBottom: '8px',
+                  fontWeight: '500',
+                  color: '#374151'
+                }}>Açıklama:</label>
+                <textarea 
+                  value={newGame.description}
+                  onChange={(e) => setNewGame(prev => ({ ...prev, description: e.target.value }))}
+                  rows={3}
+                  style={{
+                    width: '100%',
+                    padding: '8px 12px',
+                    border: '1px solid #d1d5db',
+                    borderRadius: '6px',
+                    fontSize: '0.9rem',
+                    resize: 'vertical'
+                  }}
+                />
+              </div>
+            </div>
+            <div style={{
+              display: 'flex',
+              gap: '12px',
+              marginTop: '20px',
+              justifyContent: 'flex-end'
+            }}>
+              <button 
+                style={{
+                  background: '#f3f4f6',
+                  color: '#374151',
+                  border: '1px solid #d1d5db',
+                  padding: '8px 16px',
+                  borderRadius: '6px',
+                  fontSize: '0.9rem',
+                  cursor: 'pointer'
+                }}
+                onClick={() => setShowAddModal(false)}
+              >İptal</button>
+              <button 
+                style={{
+                  background: 'linear-gradient(135deg, #667eea, #764ba2)',
+                  color: 'white',
+                  border: 'none',
+                  padding: '8px 16px',
+                  borderRadius: '6px',
+                  fontSize: '0.9rem',
+                  cursor: 'pointer'
+                }}
+                onClick={handleAddGame}
+              >Oyun Ekle</button>
+            </div>
+          </div>
         </div>
+      )}
 
-        {/* Add Game Modal */}
-        {showAddModal && (
-          <div className="modal-overlay">
-            <div className="modal">
-              <div className="modal-header">
-                <h3>Yeni Oyun Ekle</h3>
-                <button className="close-btn" onClick={() => setShowAddModal(false)}>×</button>
+      {/* Edit Game Modal */}
+      {editingGame && (
+        <div style={{
+          position: 'fixed',
+          top: 0,
+          left: 0,
+          right: 0,
+          bottom: 0,
+          background: 'rgba(0, 0, 0, 0.5)',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          zIndex: 1000
+        }}>
+          <div style={{
+            background: 'white',
+            borderRadius: '12px',
+            padding: '24px',
+            width: '90%',
+            maxWidth: '500px',
+            maxHeight: '90vh',
+            overflow: 'auto'
+          }}>
+            <div style={{
+              display: 'flex',
+              justifyContent: 'space-between',
+              alignItems: 'center',
+              marginBottom: '20px'
+            }}>
+              <h3 style={{
+                fontSize: '1.2rem',
+                fontWeight: '600',
+                color: '#1f2937',
+                margin: '0'
+              }}>Oyun Düzenle</h3>
+              <button 
+                style={{
+                  background: 'none',
+                  border: 'none',
+                  fontSize: '1.5rem',
+                  cursor: 'pointer',
+                  color: '#6b7280'
+                }}
+                onClick={() => setEditingGame(null)}
+              >×</button>
+            </div>
+            <div style={{
+              display: 'flex',
+              flexDirection: 'column',
+              gap: '16px'
+            }}>
+              <div>
+                <label style={{
+                  display: 'block',
+                  marginBottom: '8px',
+                  fontWeight: '500',
+                  color: '#374151'
+                }}>Oyun Adı:</label>
+                <input 
+                  type="text" 
+                  value={editingGame.name}
+                  onChange={(e) => setEditingGame(prev => ({ ...prev, name: e.target.value }))}
+                  style={{
+                    width: '100%',
+                    padding: '8px 12px',
+                    border: '1px solid #d1d5db',
+                    borderRadius: '6px',
+                    fontSize: '0.9rem'
+                  }}
+                />
               </div>
-              <div className="modal-body">
-                <div className="form-group">
-                  <label>Oyun Adı:</label>
-                  <input 
-                    type="text" 
-                    value={newGame.name}
-                    onChange={(e) => setNewGame(prev => ({ ...prev, name: e.target.value }))}
-                  />
-                </div>
-                <div className="form-group">
-                  <label>Kitap:</label>
-                  <select 
-                    value={newGame.book}
-                    onChange={(e) => setNewGame(prev => ({ ...prev, book: e.target.value }))}
-                  >
-                    <option value="">Seçiniz</option>
-                    <option value="Benim Küçük Deneylerim">Benim Küçük Deneylerim</option>
-                    <option value="Hava Olayları">Hava Olayları</option>
-                    <option value="50 Macera">50 Macera</option>
-                    <option value="Atalarımızdan Dersler">Atalarımızdan Dersler</option>
-                    <option value="Oyunlarla Satranç">Oyunlarla Satranç</option>
-                  </select>
-                </div>
-                <div className="form-group">
-                  <label>Kategori:</label>
-                  <select 
-                    value={newGame.category}
-                    onChange={(e) => setNewGame(prev => ({ ...prev, category: e.target.value }))}
-                  >
-                    <option value="">Seçiniz</option>
-                    <option value="Strateji">Strateji</option>
-                    <option value="Bilim">Bilim</option>
-                    <option value="Fizik">Fizik</option>
-                    <option value="Planlama">Planlama</option>
-                    <option value="Yaratıcılık">Yaratıcılık</option>
-                    <option value="Simülasyon">Simülasyon</option>
-                    <option value="Mühendislik">Mühendislik</option>
-                  </select>
-                </div>
-                <div className="form-group">
-                  <label>Zorluk:</label>
-                  <select 
-                    value={newGame.difficulty}
-                    onChange={(e) => setNewGame(prev => ({ ...prev, difficulty: e.target.value }))}
-                  >
-                    <option value="">Seçiniz</option>
-                    <option value="Kolay">Kolay</option>
-                    <option value="Orta">Orta</option>
-                    <option value="Zor">Zor</option>
-                  </select>
-                </div>
-                <div className="form-group">
-                  <label>Açıklama:</label>
-                  <textarea 
-                    value={newGame.description}
-                    onChange={(e) => setNewGame(prev => ({ ...prev, description: e.target.value }))}
-                    rows={3}
-                  />
-                </div>
+              <div>
+                <label style={{
+                  display: 'block',
+                  marginBottom: '8px',
+                  fontWeight: '500',
+                  color: '#374151'
+                }}>Kitap:</label>
+                <select 
+                  value={editingGame.book}
+                  onChange={(e) => setEditingGame(prev => ({ ...prev, book: e.target.value }))}
+                  style={{
+                    width: '100%',
+                    padding: '8px 12px',
+                    border: '1px solid #d1d5db',
+                    borderRadius: '6px',
+                    fontSize: '0.9rem'
+                  }}
+                >
+                  <option value="Benim Küçük Deneylerim">Benim Küçük Deneylerim</option>
+                  <option value="Hava Olayları">Hava Olayları</option>
+                  <option value="50 Macera">50 Macera</option>
+                  <option value="Atalarımızdan Dersler">Atalarımızdan Dersler</option>
+                  <option value="Oyunlarla Satranç">Oyunlarla Satranç</option>
+                </select>
               </div>
-              <div className="modal-footer">
-                <button className="btn-secondary" onClick={() => setShowAddModal(false)}>İptal</button>
-                <button className="btn-primary" onClick={handleAddGame}>Oyun Ekle</button>
+              <div>
+                <label style={{
+                  display: 'block',
+                  marginBottom: '8px',
+                  fontWeight: '500',
+                  color: '#374151'
+                }}>Kategori:</label>
+                <select 
+                  value={editingGame.category}
+                  onChange={(e) => setEditingGame(prev => ({ ...prev, category: e.target.value }))}
+                  style={{
+                    width: '100%',
+                    padding: '8px 12px',
+                    border: '1px solid #d1d5db',
+                    borderRadius: '6px',
+                    fontSize: '0.9rem'
+                  }}
+                >
+                  <option value="Strateji">Strateji</option>
+                  <option value="Bilim">Bilim</option>
+                  <option value="Fizik">Fizik</option>
+                  <option value="Planlama">Planlama</option>
+                  <option value="Yaratıcılık">Yaratıcılık</option>
+                  <option value="Simülasyon">Simülasyon</option>
+                  <option value="Mühendislik">Mühendislik</option>
+                </select>
+              </div>
+              <div>
+                <label style={{
+                  display: 'block',
+                  marginBottom: '8px',
+                  fontWeight: '500',
+                  color: '#374151'
+                }}>Zorluk:</label>
+                <select 
+                  value={editingGame.difficulty}
+                  onChange={(e) => setEditingGame(prev => ({ ...prev, difficulty: e.target.value }))}
+                  style={{
+                    width: '100%',
+                    padding: '8px 12px',
+                    border: '1px solid #d1d5db',
+                    borderRadius: '6px',
+                    fontSize: '0.9rem'
+                  }}
+                >
+                  <option value="Kolay">Kolay</option>
+                  <option value="Orta">Orta</option>
+                  <option value="Zor">Zor</option>
+                </select>
+              </div>
+              <div>
+                <label style={{
+                  display: 'block',
+                  marginBottom: '8px',
+                  fontWeight: '500',
+                  color: '#374151'
+                }}>Açıklama:</label>
+                <textarea 
+                  value={editingGame.description}
+                  onChange={(e) => setEditingGame(prev => ({ ...prev, description: e.target.value }))}
+                  rows={3}
+                  style={{
+                    width: '100%',
+                    padding: '8px 12px',
+                    border: '1px solid #d1d5db',
+                    borderRadius: '6px',
+                    fontSize: '0.9rem',
+                    resize: 'vertical'
+                  }}
+                />
               </div>
             </div>
-          </div>
-        )}
-
-        {/* Edit Game Modal */}
-        {editingGame && (
-          <div className="modal-overlay">
-            <div className="modal">
-              <div className="modal-header">
-                <h3>Oyun Düzenle</h3>
-                <button className="close-btn" onClick={() => setEditingGame(null)}>×</button>
-              </div>
-              <div className="modal-body">
-                <div className="form-group">
-                  <label>Oyun Adı:</label>
-                  <input 
-                    type="text" 
-                    value={editingGame.name}
-                    onChange={(e) => setEditingGame(prev => ({ ...prev, name: e.target.value }))}
-                  />
-                </div>
-                <div className="form-group">
-                  <label>Kitap:</label>
-                  <select 
-                    value={editingGame.book}
-                    onChange={(e) => setEditingGame(prev => ({ ...prev, book: e.target.value }))}
-                  >
-                    <option value="Benim Küçük Deneylerim">Benim Küçük Deneylerim</option>
-                    <option value="Hava Olayları">Hava Olayları</option>
-                    <option value="50 Macera">50 Macera</option>
-                    <option value="Atalarımızdan Dersler">Atalarımızdan Dersler</option>
-                    <option value="Oyunlarla Satranç">Oyunlarla Satranç</option>
-                  </select>
-                </div>
-                <div className="form-group">
-                  <label>Kategori:</label>
-                  <select 
-                    value={editingGame.category}
-                    onChange={(e) => setEditingGame(prev => ({ ...prev, category: e.target.value }))}
-                  >
-                    <option value="Strateji">Strateji</option>
-                    <option value="Bilim">Bilim</option>
-                    <option value="Fizik">Fizik</option>
-                    <option value="Planlama">Planlama</option>
-                    <option value="Yaratıcılık">Yaratıcılık</option>
-                    <option value="Simülasyon">Simülasyon</option>
-                    <option value="Mühendislik">Mühendislik</option>
-                  </select>
-                </div>
-                <div className="form-group">
-                  <label>Zorluk:</label>
-                  <select 
-                    value={editingGame.difficulty}
-                    onChange={(e) => setEditingGame(prev => ({ ...prev, difficulty: e.target.value }))}
-                  >
-                    <option value="Kolay">Kolay</option>
-                    <option value="Orta">Orta</option>
-                    <option value="Zor">Zor</option>
-                  </select>
-                </div>
-                <div className="form-group">
-                  <label>Açıklama:</label>
-                  <textarea 
-                    value={editingGame.description}
-                    onChange={(e) => setEditingGame(prev => ({ ...prev, description: e.target.value }))}
-                    rows={3}
-                  />
-                </div>
-              </div>
-              <div className="modal-footer">
-                <button className="btn-secondary" onClick={() => setEditingGame(null)}>İptal</button>
-                <button className="btn-primary" onClick={handleUpdateGame}>Güncelle</button>
-              </div>
+            <div style={{
+              display: 'flex',
+              gap: '12px',
+              marginTop: '20px',
+              justifyContent: 'flex-end'
+            }}>
+              <button 
+                style={{
+                  background: '#f3f4f6',
+                  color: '#374151',
+                  border: '1px solid #d1d5db',
+                  padding: '8px 16px',
+                  borderRadius: '6px',
+                  fontSize: '0.9rem',
+                  cursor: 'pointer'
+                }}
+                onClick={() => setEditingGame(null)}
+              >İptal</button>
+              <button 
+                style={{
+                  background: 'linear-gradient(135deg, #667eea, #764ba2)',
+                  color: 'white',
+                  border: 'none',
+                  padding: '8px 16px',
+                  borderRadius: '6px',
+                  fontSize: '0.9rem',
+                  cursor: 'pointer'
+                }}
+                onClick={handleUpdateGame}
+              >Güncelle</button>
             </div>
           </div>
-        )}
-      </main>
+        </div>
+      )}
     </div>
   );
 }

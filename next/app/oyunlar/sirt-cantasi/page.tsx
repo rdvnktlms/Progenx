@@ -1,5 +1,6 @@
 "use client";
 import { useEffect, useRef, useState } from "react";
+import AuthGuard from "../../utils/authGuard";
 
 interface Item {
   id: string;
@@ -16,7 +17,7 @@ interface BackpackItem extends Item {
   inBackpack: boolean;
 }
 
-export default function SirtCantasiOyunu() {
+function SirtCantasiOyunu() {
   const [items, setItems] = useState<BackpackItem[]>([]);
   const [isClient, setIsClient] = useState(false);
 
@@ -410,5 +411,13 @@ export default function SirtCantasiOyunu() {
       <audio ref={aError} src="/audio/error-sound.mp3" preload="auto"/>
       <audio ref={aPlace} src="/audio/place-sound.mp3" preload="auto"/>
     </>
+  );
+}
+
+export default function SirtCantasiPage() {
+  return (
+    <AuthGuard requiredBookId="tatilde-50-macera" gameId="sirt-cantasi">
+      <SirtCantasiOyunu />
+    </AuthGuard>
   );
 }

@@ -1,5 +1,6 @@
 "use client";
 import { useEffect, useRef, useState } from "react";
+import AuthGuard from "../../utils/authGuard";
 
 interface ExperimentStep {
   id: number;
@@ -9,7 +10,7 @@ interface ExperimentStep {
   materials: string[];
 }
 
-export default function SuGemisiOyunu() {
+function SuGemisiOyunu() {
   const [currentStep, setCurrentStep] = useState(0);
   const [steps, setSteps] = useState<ExperimentStep[]>([
     {
@@ -405,5 +406,13 @@ export default function SuGemisiOyunu() {
       </section>
 
     </>
+  );
+}
+
+export default function SuGemisiPage() {
+  return (
+    <AuthGuard requiredBookId="benim-kucuk-deneylerim" gameId="su-gemisi">
+      <SuGemisiOyunu />
+    </AuthGuard>
   );
 }

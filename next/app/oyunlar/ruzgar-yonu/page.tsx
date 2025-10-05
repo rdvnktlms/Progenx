@@ -1,5 +1,6 @@
 "use client";
 import { useEffect, useRef, useState } from "react";
+import AuthGuard from "../../utils/authGuard";
 
 interface WindDirection {
   id: number;
@@ -19,7 +20,7 @@ const windDirections: WindDirection[] = [
   { id: 8, name: "Kuzeybatı", angle: 315, emoji: "↖️" }
 ];
 
-export default function RuzgarYonuOyunu() {
+function RuzgarYonuOyunu() {
   const [currentWind, setCurrentWind] = useState<WindDirection | null>(null);
   const [selectedDirection, setSelectedDirection] = useState<number | null>(null);
   const [score, setScore] = useState(0);
@@ -221,5 +222,13 @@ export default function RuzgarYonuOyunu() {
       <audio ref={aWrong} src="/audio/wrong-sound.mp3" preload="auto"/>
       <audio ref={aWin} src="/audio/win-sound.mp3" preload="auto"/>
     </>
+  );
+}
+
+export default function RuzgarYonuPage() {
+  return (
+    <AuthGuard requiredBookId="hava-olaylari" gameId="ruzgar-yonu">
+      <RuzgarYonuOyunu />
+    </AuthGuard>
   );
 }

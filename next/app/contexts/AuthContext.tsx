@@ -24,9 +24,11 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
   useEffect(() => {
     // Sayfa yüklendiğinde localStorage'dan kullanıcı bilgilerini yükle
-    const savedUser = localStorage.getItem('user');
-    if (savedUser) {
-      setUser(JSON.parse(savedUser));
+    if (typeof window !== 'undefined') {
+      const savedUser = localStorage.getItem('user');
+      if (savedUser) {
+        setUser(JSON.parse(savedUser));
+      }
     }
     setIsLoading(false);
   }, []);
@@ -34,7 +36,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const login = async (email: string, password: string): Promise<boolean> => {
     setIsLoading(true);
     
-    // Demo kullanıcılar
+    // Test kullanıcıları
     const demoUsers = [
       { id: 1, name: "Ahmet Yılmaz", email: "ahmet@example.com", password: "123456" },
       { id: 2, name: "Elif Kaya", email: "elif@example.com", password: "123456" },
@@ -56,8 +58,39 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         avatar: foundUser.name.charAt(0).toUpperCase()
       };
       
+      // Test hesapları için kitap sahipliği ayarla
+      let userBooks = [];
+      switch(foundUser.email) {
+        case 'ahmet@example.com': // Tüm kitaplar
+          userBooks = [
+            { id: 'oyunlarla-satranc', title: 'Oyunlarla Satranç', purchaseDate: new Date().toISOString() },
+            { id: 'hava-olaylari', title: 'Hava Olayları', purchaseDate: new Date().toISOString() },
+            { id: 'benim-kucuk-deneylerim', title: 'Benim Küçük Deneylerim', purchaseDate: new Date().toISOString() },
+            { id: 'atalarimizdan-dersler', title: 'Atalarımızdan Dersler', purchaseDate: new Date().toISOString() },
+            { id: 'tatilde-50-macera', title: 'Tatilde 50 Macera', purchaseDate: new Date().toISOString() }
+          ];
+          break;
+        case 'elif@example.com': // Tek kitap
+          userBooks = [
+            { id: 'benim-kucuk-deneylerim', title: 'Benim Küçük Deneylerim', purchaseDate: new Date().toISOString() }
+          ];
+          break;
+        case 'mehmet@example.com': // Kitapsız
+          userBooks = [];
+          break;
+        default:
+          // Diğer hesaplar için mevcut localStorage'dan al
+        if (typeof window !== 'undefined') {
+          const existingBooks = localStorage.getItem('userBooks');
+          userBooks = existingBooks ? JSON.parse(existingBooks) : [];
+        }
+      }
+      
       setUser(userData);
-      localStorage.setItem('user', JSON.stringify(userData));
+      if (typeof window !== 'undefined') {
+        localStorage.setItem('user', JSON.stringify(userData));
+        localStorage.setItem('userBooks', JSON.stringify(userBooks));
+      }
       setIsLoading(false);
       return true;
     }
@@ -81,14 +114,19 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     };
 
     setUser(newUser);
-    localStorage.setItem('user', JSON.stringify(newUser));
+    if (typeof window !== 'undefined') {
+      localStorage.setItem('user', JSON.stringify(newUser));
+    }
     setIsLoading(false);
     return true;
   };
 
   const logout = () => {
     setUser(null);
-    localStorage.removeItem('user');
+    if (typeof window !== 'undefined') {
+      localStorage.removeItem('user');
+      localStorage.removeItem('userBooks');
+    }
   };
 
   return (

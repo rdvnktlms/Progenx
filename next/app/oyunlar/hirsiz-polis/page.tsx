@@ -1,10 +1,11 @@
 "use client";
 import { useEffect, useMemo, useRef, useState } from "react";
+import AuthGuard from "../../utils/authGuard";
 
 type Piece = "T" | "P" | null; // T = Thief (Hırsız), P = Police (Polis)
 const BOARD_SIZE = 8;
 
-export default function ThiefPoliceGame(){
+function ThiefPoliceGame(){
   const [board, setBoard] = useState<Piece[][]>(()=>Array.from({length:BOARD_SIZE},()=>Array(BOARD_SIZE).fill(null)));
   const [playerTurn, setPlayerTurn] = useState(false); // Police starts first
   const [selected, setSelected] = useState<{r:number,c:number}|null>(null);
@@ -435,5 +436,13 @@ export default function ThiefPoliceGame(){
       <audio ref={aWin} src="/audio/police-intro-sfx-323774.mp3" preload="auto"/>
       <audio ref={aLose} src="/audio/depositphotos_412970482-track-cartoon-thief-grumpy-laugh.mp3" preload="auto"/>
     </>
+  );
+}
+
+export default function HirsizPolisPage() {
+  return (
+    <AuthGuard requiredBookId="oyunlarla-satranc" gameId="hirsiz-polis">
+      <ThiefPoliceGame />
+    </AuthGuard>
   );
 }

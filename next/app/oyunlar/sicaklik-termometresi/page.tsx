@@ -1,5 +1,6 @@
 "use client";
 import { useEffect, useRef, useState } from "react";
+import AuthGuard from "../../utils/authGuard";
 
 interface WeatherScenario {
   id: number;
@@ -120,7 +121,7 @@ const multipleChoiceScenarios: MultipleChoiceOption[][] = [
   ]
 ];
 
-export default function SicaklikTermometresiOyunu() {
+function SicaklikTermometresiOyunu() {
   const [currentOptions, setCurrentOptions] = useState<MultipleChoiceOption[]>([]);
   const [selectedOption, setSelectedOption] = useState<MultipleChoiceOption | null>(null);
   const [currentTemp, setCurrentTemp] = useState(0);
@@ -475,5 +476,13 @@ export default function SicaklikTermometresiOyunu() {
       <audio ref={aWrong} src="/audio/wrong-sound.mp3" preload="auto"/>
       <audio ref={aWin} src="/audio/win-sound.mp3" preload="auto"/>
     </>
+  );
+}
+
+export default function TermometrePage() {
+  return (
+    <AuthGuard requiredBookId="hava-olaylari" gameId="sicaklik-termometresi">
+      <SicaklikTermometresiOyunu />
+    </AuthGuard>
   );
 }

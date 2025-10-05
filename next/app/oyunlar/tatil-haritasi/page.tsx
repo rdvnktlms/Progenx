@@ -1,5 +1,6 @@
 "use client";
 import { useEffect, useRef, useState } from "react";
+import AuthGuard from "../../utils/authGuard";
 
 interface MapItem {
   id: string;
@@ -29,7 +30,7 @@ interface DiaryEntry {
   learnings: string;
 }
 
-export default function TatilHaritasiOyunu() {
+function TatilHaritasiOyunu() {
   const [mapItems, setMapItems] = useState<MapItem[]>([]);
   const [selectedItem, setSelectedItem] = useState<string>('toy-store');
   const [player, setPlayer] = useState<Player>({ x: 50, y: 50, totalSteps: 0, visitedPlaces: [], lastVisitedPlace: null });
@@ -467,5 +468,13 @@ export default function TatilHaritasiOyunu() {
       <audio ref={aSuccess} src="/audio/success-sound.mp3" preload="auto"/>
       <audio ref={aPlace} src="/audio/place-sound.mp3" preload="auto"/>
     </>
+  );
+}
+
+export default function TatilHaritasiPage() {
+  return (
+    <AuthGuard requiredBookId="tatilde-50-macera" gameId="tatil-haritasi">
+      <TatilHaritasiOyunu />
+    </AuthGuard>
   );
 }

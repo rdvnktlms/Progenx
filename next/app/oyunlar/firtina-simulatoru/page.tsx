@@ -1,5 +1,6 @@
 "use client";
 import { useEffect, useRef, useState } from "react";
+import AuthGuard from "../../utils/authGuard";
 
 interface WeatherElement {
   id: number;
@@ -19,7 +20,7 @@ const weatherElements: WeatherElement[] = [
   { id: 4, name: "Rüzgar", emoji: "💨", description: "Rüzgar hızı", value: 10, min: 0, max: 50, unit: "km/h" }
 ];
 
-export default function FirtinaSimulatoruOyunu() {
+function FirtinaSimulatoruOyunu() {
   const [elements, setElements] = useState<WeatherElement[]>(weatherElements);
   const [score, setScore] = useState(0);
   const [round, setRound] = useState(1);
@@ -1140,5 +1141,13 @@ export default function FirtinaSimulatoruOyunu() {
       <audio ref={aWind} src="/audio/wind-sound.mp3" preload="auto"/>
       <audio ref={aWin} src="/audio/win-sound.mp3" preload="auto"/>
     </>
+  );
+}
+
+export default function FirtinaSimulatoruPage() {
+  return (
+    <AuthGuard requiredBookId="hava-olaylari" gameId="firtina-simulatoru">
+      <FirtinaSimulatoruOyunu />
+    </AuthGuard>
   );
 }

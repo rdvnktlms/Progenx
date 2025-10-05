@@ -1,5 +1,6 @@
 "use client";
 import { useEffect, useRef, useState } from "react";
+import AuthGuard from "../../utils/authGuard";
 
 interface Color {
   id: number;
@@ -19,7 +20,7 @@ const rainbowColors: Color[] = [
   { id: 7, name: "Mor", emoji: "🟣", hex: "#800080", order: 7 }
 ];
 
-export default function GokkusagiRenkleriOyunu() {
+function GokkusagiRenkleriOyunu() {
   const [shuffledColors, setShuffledColors] = useState<Color[]>([]);
   const [selectedColors, setSelectedColors] = useState<Color[]>([]);
   const [score, setScore] = useState(0);
@@ -264,5 +265,13 @@ export default function GokkusagiRenkleriOyunu() {
       <audio ref={aWrong} src="/audio/wrong-sound.mp3" preload="auto"/>
       <audio ref={aWin} src="/audio/win-sound.mp3" preload="auto"/>
     </>
+  );
+}
+
+export default function GokkusagiRenkleriPage() {
+  return (
+    <AuthGuard requiredBookId="hava-olaylari" gameId="gokkusagi-renkleri">
+      <GokkusagiRenkleriOyunu />
+    </AuthGuard>
   );
 }

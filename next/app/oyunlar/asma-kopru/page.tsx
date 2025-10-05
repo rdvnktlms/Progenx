@@ -1,5 +1,6 @@
 "use client";
 import { useEffect, useRef, useState } from "react";
+import AuthGuard from "../../utils/authGuard";
 
 interface ExperimentStep {
   id: number;
@@ -9,7 +10,7 @@ interface ExperimentStep {
   materials: string[];
 }
 
-export default function AsmaKopruOyunu() {
+function AsmaKopruOyunu() {
   const [currentStep, setCurrentStep] = useState(0);
   const [steps, setSteps] = useState<ExperimentStep[]>([
     {
@@ -376,5 +377,13 @@ export default function AsmaKopruOyunu() {
       </section>
 
     </>
+  );
+}
+
+export default function AsmaKopruPage() {
+  return (
+    <AuthGuard requiredBookId="benim-kucuk-deneylerim" gameId="asma-kopru">
+      <AsmaKopruOyunu />
+    </AuthGuard>
   );
 }

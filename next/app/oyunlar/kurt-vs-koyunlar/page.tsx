@@ -1,10 +1,11 @@
 "use client";
 import { useEffect, useMemo, useRef, useState } from "react";
+import AuthGuard from "../../utils/authGuard";
 
 type Piece = "S" | "W" | null;
 const BOARD_SIZE = 8;
 
-export default function Game(){
+function Game(){
   const [board, setBoard] = useState<Piece[][]>(()=>Array.from({length:BOARD_SIZE},()=>Array(BOARD_SIZE).fill(null)));
   const [playerTurn, setPlayerTurn] = useState(true);
   const [selected, setSelected] = useState<{r:number,c:number}|null>(null);
@@ -327,4 +328,10 @@ export default function Game(){
   );
 }
 
-
+export default function KurtVsKoyunlarPage() {
+  return (
+    <AuthGuard requiredBookId="oyunlarla-satranc" gameId="kurt-vs-koyunlar">
+      <Game />
+    </AuthGuard>
+  );
+}

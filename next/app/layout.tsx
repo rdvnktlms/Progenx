@@ -1,21 +1,14 @@
 "use client";
 import './theme.css';
 import type { ReactNode } from 'react';
-import { useEffect, useState } from 'react';
+import { usePathname } from 'next/navigation';
 import { AuthProvider } from './contexts/AuthContext';
 import Header from './components/Header';
 
 export default function RootLayout({ children }: { children: ReactNode }) {
-  const [isAdminPage, setIsAdminPage] = useState(false);
-  const [isClient, setIsClient] = useState(false);
+  const pathname = usePathname();
+  const isAdminPage = pathname?.startsWith('/admin') || false;
 
-  useEffect(() => {
-    setIsClient(true);
-    if (typeof window !== 'undefined') {
-      const path = window.location.pathname;
-      setIsAdminPage(path.startsWith('/admin'));
-    }
-  }, []);
   return (
     <html lang="tr">
       <head>
@@ -25,28 +18,35 @@ export default function RootLayout({ children }: { children: ReactNode }) {
       <body>
         <AuthProvider>
           <div className="container">
-          {isClient && !isAdminPage && <Header />}
-          {children}
-          {isClient && !isAdminPage && (
-            <footer className="footer">
-              <div className="footer-content">
-                <div className="footer-left">
-                  <small>İnteraktif Kitap Projesi</small>
-                </div>
-                <div className="footer-right">
-                  <div className="progenx-logo">
-                    <span className="copyright-symbol">©</span>
-                    <span className="progenx-text">Progenx</span>
+            {!isAdminPage && <Header />}
+            {children}
+            {!isAdminPage && (
+              <footer className="footer">
+                <div className="footer-bottom">
+                  <div className="footer-branding">
+                    <div className="footer-left">
+                      <small>İnteraktif Kitap Projesi</small>
+                    </div>
+                    <div className="footer-center">
+                      <img 
+                        src="/img/odtülogo.png" 
+                        alt="ODTÜ Yayıncılık Logo" 
+                        className="odtu-logo"
+                      />
+                    </div>
+                    <div className="footer-right">
+                      <div className="progenx-logo">
+                        <span className="copyright-symbol">©</span>
+                        <span className="progenx-text">Progenx</span>
+                      </div>
+                    </div>
                   </div>
                 </div>
-              </div>
-            </footer>
-          )}
+              </footer>
+            )}
           </div>
         </AuthProvider>
       </body>
     </html>
   );
 }
-
-
