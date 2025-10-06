@@ -374,18 +374,22 @@ export default function UserManagement() {
     }}>
       {/* Header */}
       <div style={{
-        marginBottom: '30px'
+        marginBottom: '30px',
+        background: 'linear-gradient(135deg, rgb(205, 23, 25), rgb(180, 20, 22))',
+        color: 'white',
+        padding: '20px',
+        borderRadius: '12px'
       }}>
         <h1 style={{
           fontSize: '2rem',
           fontWeight: '700',
-          color: '#1f2937',
+          color: 'white',
           marginBottom: '8px'
         }}>
           Kullanıcı Yönetimi
         </h1>
         <p style={{
-          color: '#6b7280',
+          color: 'white',
           fontSize: '1rem'
         }}>
           Kullanıcıların kitap sahipliği, key kullanımı ve aktivasyon bilgilerini yönetin

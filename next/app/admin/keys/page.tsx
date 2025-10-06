@@ -125,9 +125,15 @@ export default function KeysPage() {
 
   return (
     <>
-      <section className="hero">
-        <h2>🔑 Key Yönetimi</h2>
-        <p>Kitap key'lerini oluşturun ve yönetin</p>
+      <section className="hero" style={{
+        background: 'linear-gradient(135deg, rgb(205, 23, 25), rgb(180, 20, 22))',
+        color: 'white',
+        padding: '20px',
+        borderRadius: '12px',
+        marginBottom: '30px'
+      }}>
+        <h2 style={{ color: 'white', margin: '0 0 10px 0' }}>🔑 Key Yönetimi</h2>
+        <p style={{ color: 'white', margin: '0' }}>Kitap key'lerini oluşturun ve yönetin</p>
       </section>
 
       <section className="admin-section">

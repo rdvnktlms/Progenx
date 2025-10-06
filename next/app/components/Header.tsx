@@ -51,10 +51,6 @@ function Header() {
                     <span className="item-text">Kitaplarım</span>
                     <span className="item-badge">5</span>
                   </a>
-                  <a href="/profil" className="dropdown-item">
-                    <span className="item-icon">⚙️</span>
-                    <span className="item-text">Profil Ayarları</span>
-                  </a>
                   <a href="/favoriler" className="dropdown-item">
                     <span className="item-icon">❤️</span>
                     <span className="item-text">Favoriler</span>

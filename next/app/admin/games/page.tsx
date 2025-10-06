@@ -218,12 +218,16 @@ export default function GameManagement() {
         display: 'flex',
         justifyContent: 'space-between',
         alignItems: 'center',
-        marginBottom: '30px'
+        marginBottom: '30px',
+        background: 'linear-gradient(135deg, rgb(205, 23, 25), rgb(180, 20, 22))',
+        color: 'white',
+        padding: '20px',
+        borderRadius: '12px'
       }}>
         <h1 style={{
           fontSize: '2rem',
           fontWeight: '700',
-          color: '#1f2937',
+          color: 'white',
           margin: '0'
         }}>🎮 Oyun Yönetimi</h1>
         <button 

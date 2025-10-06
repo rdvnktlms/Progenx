@@ -42,16 +42,20 @@ export default function AdminDashboard() {
       minHeight: '100vh'
     }}>
       <div style={{
-        marginBottom: '30px'
+        marginBottom: '30px',
+        background: 'linear-gradient(135deg, rgb(205, 23, 25), rgb(180, 20, 22))',
+        color: 'white',
+        padding: '20px',
+        borderRadius: '12px'
       }}>
         <h1 style={{
           fontSize: '2rem',
           fontWeight: '700',
-          color: '#1f2937',
+          color: 'white',
           margin: '0 0 10px 0'
         }}>📊 Dashboard</h1>
         <p style={{
-          color: '#6b7280',
+          color: 'white',
           fontSize: '1rem',
           margin: '0'
         }}>İnteraktif Kitap Projesi Yönetim Paneli</p>
