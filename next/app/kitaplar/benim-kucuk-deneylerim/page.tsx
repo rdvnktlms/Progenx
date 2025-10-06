@@ -2,6 +2,7 @@
 import { useState, useEffect } from 'react';
 import { useAuth } from '../../contexts/AuthContext';
 import { verifyKey, getBookTitle, isValidKeyFormat } from '../../utils/keySystem';
+import { recordPageView } from '../../utils/analytics';
 
 export default function BenimKucukDeneylerimPage(){
   const { user } = useAuth();
@@ -20,6 +21,9 @@ export default function BenimKucukDeneylerimPage(){
       const hasBook = userBooks.some((book: any) => book.id === bookId);
       setHasBookAccess(hasBook);
     }
+    
+    // Sayfa görüntüleme kaydı
+    recordPageView('/kitaplar/benim-kucuk-deneylerim', user?.email || 'guest', 0);
   }, [user, bookId]);
 
   const handleKeyVerification = async () => {

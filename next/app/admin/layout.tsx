@@ -35,17 +35,17 @@ export default function AdminLayout({
           } else {
             // Token süresi dolmuş
             localStorage.removeItem('adminAuth');
-            window.location.href = '/admin/login';
+            window.location.href = '/admin/login?key=odtu-admin-2024-secret';
             return;
           }
         } catch (error) {
           // Geçersiz token
           localStorage.removeItem('adminAuth');
-          window.location.href = '/admin/login';
+          window.location.href = '/admin/login?key=odtu-admin-2024-secret';
           return;
         }
       } else {
-        window.location.href = '/admin/login';
+        window.location.href = '/admin/login?key=odtu-admin-2024-secret';
         return;
       }
       setIsLoading(false);
@@ -89,18 +89,18 @@ export default function AdminLayout({
   }
 
   const navItems = [
-    { href: '/admin/dashboard', label: 'Dashboard', icon: '📊' },
-    { href: '/admin/books', label: 'Kitaplar', icon: '📚' },
-    { href: '/admin/users', label: 'Kullanıcılar', icon: '👥' },
-    { href: '/admin/games', label: 'Oyunlar', icon: '🎮' },
-    { href: '/admin/keys', label: 'Key Yönetimi', icon: '🔑' },
-    { href: '/admin/reports', label: 'Raporlar', icon: '📈' },
+    { href: '/admin/dashboard?key=odtu-admin-2024-secret', label: 'Dashboard', icon: '📊' },
+    { href: '/admin/books?key=odtu-admin-2024-secret', label: 'Kitaplar', icon: '📚' },
+    { href: '/admin/users?key=odtu-admin-2024-secret', label: 'Kullanıcılar', icon: '👥' },
+    { href: '/admin/games?key=odtu-admin-2024-secret', label: 'Oyunlar', icon: '🎮' },
+    { href: '/admin/keys?key=odtu-admin-2024-secret', label: 'Key Yönetimi', icon: '🔑' },
+    { href: '/admin/reports?key=odtu-admin-2024-secret', label: 'Raporlar', icon: '📈' },
   ];
 
   const handleLogout = () => {
     localStorage.removeItem('adminAuth');
-    // Sayfayı yenile ve login'e yönlendir
-    window.location.href = '/admin/login';
+    // Güvenli admin login URL'ine yönlendir
+    window.location.href = '/admin/login?key=odtu-admin-2024-secret';
   };
 
   return (

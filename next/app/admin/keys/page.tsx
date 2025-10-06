@@ -1,8 +1,10 @@
 "use client";
 import { useState, useEffect } from 'react';
+import { useRouter } from 'next/navigation';
 import { BookKey, createKeys, exportKeysToExcel, getBookTitle } from '../../utils/keySystem';
 
 export default function KeysPage() {
+  const router = useRouter();
   const [keys, setKeys] = useState<BookKey[]>([]);
   const [selectedBook, setSelectedBook] = useState('');
   const [keyCount, setKeyCount] = useState(10);
@@ -18,12 +20,44 @@ export default function KeysPage() {
 
   useEffect(() => {
     if (typeof window !== 'undefined') {
+      // Gizli admin URL kontrolü
+      const urlParams = new URLSearchParams(window.location.search);
+      const secretKey = urlParams.get('key');
+      const validSecretKey = 'odtu-admin-2024-secret';
+      
+      if (secretKey !== validSecretKey) {
+        // Yanlış veya eksik key - 404 sayfasına yönlendir
+        router.push('/404');
+        return;
+      }
+
+      // Önce localStorage'dan yükle
       const storedKeys = localStorage.getItem('bookKeys');
       if (storedKeys) {
-        setKeys(JSON.parse(storedKeys));
+        try {
+          const parsedKeys = JSON.parse(storedKeys);
+          // Veri bütünlüğünü kontrol et
+          const validKeys = parsedKeys.filter(key => 
+            key && 
+            key.bookId && 
+            key.keyHash && 
+            key.title && 
+            typeof key.isActive === 'boolean'
+          );
+          setKeys(validKeys);
+        } catch (error) {
+          console.error('Keys yükleme hatası:', error);
+          // Hatalı veri varsa ACTIVE_KEYS'den yükle
+          const { getAllActiveKeys } = require('../../utils/keySystem');
+          setKeys(getAllActiveKeys());
+        }
+      } else {
+        // localStorage'da yoksa ACTIVE_KEYS'den yükle
+        const { getAllActiveKeys } = require('../../utils/keySystem');
+        setKeys(getAllActiveKeys());
       }
     }
-  }, []);
+  }, [router]);
 
   const handleCreateKeys = () => {
     if (!selectedBook || keyCount <= 0) {
@@ -36,7 +70,14 @@ export default function KeysPage() {
     // Simüle edilmiş API çağrısı
     setTimeout(() => {
       const newKeys = createKeys(selectedBook, keyCount);
-      setKeys(prev => [...prev, ...newKeys]);
+      setKeys(prev => {
+        const updatedKeys = [...prev, ...newKeys];
+        // localStorage'a kaydet
+        if (typeof window !== 'undefined') {
+          localStorage.setItem('bookKeys', JSON.stringify(updatedKeys));
+        }
+        return updatedKeys;
+      });
       setIsCreating(false);
       alert(`${keyCount} adet key başarıyla oluşturuldu!`);
     }, 1000);
@@ -60,9 +101,16 @@ export default function KeysPage() {
   };
 
   const handleToggleKey = (index: number) => {
-    setKeys(prev => prev.map((key, i) => 
-      i === index ? { ...key, isActive: !key.isActive } : key
-    ));
+    setKeys(prev => {
+      const updatedKeys = prev.map((key, i) => 
+        i === index ? { ...key, isActive: !key.isActive } : key
+      );
+      // localStorage'ı güncelle
+      if (typeof window !== 'undefined') {
+        localStorage.setItem('bookKeys', JSON.stringify(updatedKeys));
+      }
+      return updatedKeys;
+    });
   };
 
   const getBookStats = (bookId: string) => {
@@ -198,7 +246,7 @@ export default function KeysPage() {
                   {keys.slice(0, 50).map((key, index) => (
                     <tr key={`${key.bookId}-${index}`}>
                       <td className="key-cell">
-                        <code>{key.keyHash.substring(0, 16)}...</code>
+                        <code>{key.keyHash ? key.keyHash.substring(0, 16) + '...' : 'N/A'}</code>
                       </td>
                       <td>{getBookTitle(key.bookId)}</td>
                       <td>
@@ -208,7 +256,7 @@ export default function KeysPage() {
                       </td>
                       <td>-</td>
                       <td>-</td>
-                      <td>{new Date(key.createdAt).toLocaleDateString('tr-TR')}</td>
+                      <td>{key.createdAt ? new Date(key.createdAt).toLocaleDateString('tr-TR') : 'N/A'}</td>
                     </tr>
                   ))}
                 </tbody>

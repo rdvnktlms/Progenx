@@ -1,7 +1,9 @@
 "use client";
 import { useState, useEffect } from 'react';
+import { useRouter } from 'next/navigation';
 
 export default function GameManagement() {
+  const router = useRouter();
   const [games, setGames] = useState([
     {
       id: 1,
@@ -136,6 +138,21 @@ export default function GameManagement() {
       description: "Köprü açma-kapama mekanizması simülasyonu"
     }
   ]);
+
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      // Gizli admin URL kontrolü
+      const urlParams = new URLSearchParams(window.location.search);
+      const secretKey = urlParams.get('key');
+      const validSecretKey = 'odtu-admin-2024-secret';
+      
+      if (secretKey !== validSecretKey) {
+        // Yanlış veya eksik key - 404 sayfasına yönlendir
+        router.push('/404');
+        return;
+      }
+    }
+  }, [router]);
 
   const [showAddModal, setShowAddModal] = useState(false);
   const [editingGame, setEditingGame] = useState(null);

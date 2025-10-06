@@ -1,6 +1,7 @@
 "use client";
 import { useEffect, useMemo, useRef, useState } from "react";
 import AuthGuard from "../../utils/authGuard";
+import { recordGameSession, recordPageView } from "../../utils/analytics";
 
 type Piece = "S" | "W" | null;
 const BOARD_SIZE = 8;
@@ -37,6 +38,9 @@ function Game(){
     setIsClient(true);
     const best = Number(localStorage.getItem("wvss-best") || 0);
     setBestScore(best);
+    
+    // Sayfa görüntüleme kaydı
+    recordPageView('/oyunlar/kurt-vs-koyunlar', 'guest', 0);
   }, []);
 
   useEffect(() => {
@@ -178,13 +182,31 @@ function Game(){
       if(captured==='W'){ 
         setGameOver(true); 
         setGameMessage("🎉 KAZANDIN! Kurt yakalandı! 🎉"); 
-        play(aWin.current); 
+        play(aWin.current);
+        
+        // Oyun oturumu kaydı
+        recordGameSession({
+          gameId: 'kurt-vs-koyunlar',
+          bookId: 'benim-kucuk-deneylerim',
+          userId: 'guest',
+          score: score + 100, // Kazanma bonusu
+          duration: 0 // Gerçek süre hesaplanabilir
+        });
         return; 
       } 
       if(r===0){ 
         setGameOver(true); 
         setGameMessage("🏆 KAZANDIN! Koyun en üste ulaştı! 🏆"); 
-        play(aWin.current); 
+        play(aWin.current);
+        
+        // Oyun oturumu kaydı
+        recordGameSession({
+          gameId: 'kurt-vs-koyunlar',
+          bookId: 'benim-kucuk-deneylerim',
+          userId: 'guest',
+          score: score + 100, // Kazanma bonusu
+          duration: 0
+        });
         return; 
       } 
       setScore(s=>s+1+(captured?3:0)); 
@@ -231,13 +253,31 @@ function Game(){
     if(nb.flat().filter(p=>p==='S').length===0){ 
       setGameOver(true); 
       setGameMessage("😢 KAYBETTIN! Kurt tüm koyunları yakaladı! 😢"); 
-      play(aLose.current); 
+      play(aLose.current);
+      
+      // Oyun oturumu kaydı
+      recordGameSession({
+        gameId: 'kurt-vs-koyunlar',
+        bookId: 'benim-kucuk-deneylerim',
+        userId: 'guest',
+        score: score,
+        duration: 0
+      });
       return; 
     } 
     if(!anyMoveInBoard(nb)){ 
       setGameOver(true); 
       setGameMessage("😔 KAYBETTIN! Hamlen kalmadı! 😔"); 
-      play(aLose.current); 
+      play(aLose.current);
+      
+      // Oyun oturumu kaydı
+      recordGameSession({
+        gameId: 'kurt-vs-koyunlar',
+        bookId: 'benim-kucuk-deneylerim',
+        userId: 'guest',
+        score: score,
+        duration: 0
+      });
       return; 
     } 
     setPlayerTurn(true); 

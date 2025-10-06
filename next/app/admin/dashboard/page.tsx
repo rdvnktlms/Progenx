@@ -1,7 +1,10 @@
 "use client";
 import { useState, useEffect } from 'react';
+import { useRouter } from 'next/navigation';
+import { createTestData, clearTestData, showTestDataInfo } from '../../utils/testData';
 
 export default function AdminDashboard() {
+  const router = useRouter();
   const [stats, setStats] = useState({
     totalBooks: 5,
     totalUsers: 1247,
@@ -11,6 +14,17 @@ export default function AdminDashboard() {
 
   useEffect(() => {
     if (typeof window !== 'undefined') {
+      // Gizli admin URL kontrolü
+      const urlParams = new URLSearchParams(window.location.search);
+      const secretKey = urlParams.get('key');
+      const validSecretKey = 'odtu-admin-2024-secret';
+      
+      if (secretKey !== validSecretKey) {
+        // Yanlış veya eksik key - 404 sayfasına yönlendir
+        router.push('/404');
+        return;
+      }
+
       // Demo veriler
       setStats({
         totalBooks: 5,
@@ -19,7 +33,7 @@ export default function AdminDashboard() {
         monthlyVisits: 8934
       });
     }
-  }, []);
+  }, [router]);
 
   return (
     <div style={{
@@ -41,6 +55,63 @@ export default function AdminDashboard() {
           fontSize: '1rem',
           margin: '0'
         }}>İnteraktif Kitap Projesi Yönetim Paneli</p>
+        
+        {/* Test Verileri Butonları */}
+        <div style={{
+          marginTop: '20px',
+          display: 'flex',
+          gap: '10px',
+          flexWrap: 'wrap'
+        }}>
+          <button
+            onClick={createTestData}
+            style={{
+              background: 'linear-gradient(135deg, #10b981, #059669)',
+              color: 'white',
+              border: 'none',
+              padding: '8px 16px',
+              borderRadius: '6px',
+              fontSize: '0.9rem',
+              fontWeight: '600',
+              cursor: 'pointer'
+            }}
+          >
+            🧪 Test Verileri Oluştur
+          </button>
+          <button
+            onClick={clearTestData}
+            style={{
+              background: 'linear-gradient(135deg, #ef4444, #dc2626)',
+              color: 'white',
+              border: 'none',
+              padding: '8px 16px',
+              borderRadius: '6px',
+              fontSize: '0.9rem',
+              fontWeight: '600',
+              cursor: 'pointer'
+            }}
+          >
+            🗑️ Test Verilerini Temizle
+          </button>
+          <button
+            onClick={() => {
+              const info = showTestDataInfo();
+              alert(`Test Verileri:\nOyun Oturumları: ${info.gameSessions}\nSayfa Görüntülemeleri: ${info.pageViews}`);
+            }}
+            style={{
+              background: 'linear-gradient(135deg, #3b82f6, #1d4ed8)',
+              color: 'white',
+              border: 'none',
+              padding: '8px 16px',
+              borderRadius: '6px',
+              fontSize: '0.9rem',
+              fontWeight: '600',
+              cursor: 'pointer'
+            }}
+          >
+            📊 Test Verilerini Göster
+          </button>
+        </div>
       </div>
 
       <div style={{

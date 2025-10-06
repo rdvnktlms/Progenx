@@ -1,5 +1,6 @@
 "use client";
 import { useEffect, useMemo, useRef, useState } from "react";
+import { recordGameSession, recordPageView } from '../../utils/analytics';
 import AuthGuard from "../../utils/authGuard";
 
 type Piece = "T" | "P" | null; // T = Thief (Hırsız), P = Police (Polis)
@@ -38,6 +39,9 @@ function ThiefPoliceGame(){
     setIsClient(true);
     const best = Number(localStorage.getItem("tp-best") || 0);
     setBestScore(best);
+    
+    // Sayfa görüntüleme kaydı
+    recordPageView('/oyunlar/hirsiz-polis', 'guest', 0);
   }, []);
 
   useEffect(() => {

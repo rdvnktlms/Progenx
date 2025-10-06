@@ -1,71 +1,50 @@
 "use client";
 import { useState, useEffect } from 'react';
+import { useRouter } from 'next/navigation';
+import { getAnalyticsData, AnalyticsData } from '../../utils/analytics';
 
 export default function ReportsPage() {
+  const router = useRouter();
   const [selectedPeriod, setSelectedPeriod] = useState('month');
-  const [reports, setReports] = useState({
-    engagement: {
-      totalViews: 45680,
-      totalInteractions: 482,
-      topViewedBooks: [
-        { name: "Oyunlarla Satranç", views: 156, interactions: 2341 },
-        { name: "Hava Olayları", views: 98, interactions: 1892 },
-        { name: "Benim Küçük Deneylerim", views: 87, interactions: 1654 },
-        { name: "Atalarımızdan Dersler", views: 76, interactions: 1432 },
-        { name: "50 Macera", views: 65, interactions: 1287 }
-      ]
-    },
-    users: {
-      totalUsers: 1247,
-      newUsers: 89,
-      activeUsers: 892,
-      userGrowth: [
-        { month: "Ocak", users: 156 },
-        { month: "Şubat", users: 189 },
-        { month: "Mart", users: 234 },
-        { month: "Nisan", users: 198 },
-        { month: "Mayıs", users: 267 },
-        { month: "Haziran", users: 203 }
-      ]
-    },
-    games: {
-      totalPlays: 1892,
-      avgScore: 84,
-      mostPlayedGames: [
-        { name: "Koyun vs Kurt", plays: 234, avgScore: 85 },
-        { name: "Rüzgar Yönü", plays: 198, avgScore: 91 },
-        { name: "Gökkuşağı Renkleri", plays: 201, avgScore: 89 },
-        { name: "Polis vs Hırsız", plays: 189, avgScore: 92 },
-        { name: "Termometre", plays: 178, avgScore: 87 }
-      ]
-    },
-    analytics: {
-      avgSessionTime: "12:34",
-      bounceRate: "23%",
-      returnVisitors: "67%",
-      favoriteCategories: [
-        { category: "Bilim", users: 456, percentage: 37 },
-        { category: "Macera", users: 234, percentage: 19 },
-        { category: "Satranç", users: 189, percentage: 15 },
-        { category: "Tarih", users: 156, percentage: 13 },
-        { category: "Fizik", users: 123, percentage: 10 }
-      ]
-    }
+  const [reports, setReports] = useState<AnalyticsData>({
+    totalUsers: 0,
+    totalGamesPlayed: 0,
+    totalViews: 0,
+    averageScore: 0,
+    mostPopularBooks: [],
+    mostPlayedGames: [],
+    userGrowth: [],
+    categoryStats: []
   });
+
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      // Gizli admin URL kontrolü
+      const urlParams = new URLSearchParams(window.location.search);
+      const secretKey = urlParams.get('key');
+      const validSecretKey = 'odtu-admin-2024-secret';
+      
+      if (secretKey !== validSecretKey) {
+        // Yanlış veya eksik key - 404 sayfasına yönlendir
+        router.push('/404');
+        return;
+      }
+
+      // Gerçek analytics verilerini yükle
+      const analyticsData = getAnalyticsData();
+      setReports(analyticsData);
+    }
+  }, [router]);
 
   const exportToExcel = () => {
     const data = [
       ['Rapor Türü', 'Metrik', 'Değer'],
-      ['Kullanıcılar', 'Toplam Kullanıcı', reports.users.totalUsers],
-      ['Kullanıcılar', 'Yeni Kullanıcı', reports.users.newUsers],
-      ['Kullanıcılar', 'Aktif Kullanıcı', reports.users.activeUsers],
-      ['Etkileşim', 'Toplam Görüntüleme', reports.engagement.totalViews],
-      ['Etkileşim', 'Toplam Etkileşim', reports.engagement.totalInteractions],
-      ['Oyunlar', 'Toplam Oynanma', reports.games.totalPlays],
-      ['Oyunlar', 'Ortalama Skor', reports.games.avgScore],
-      ['Analitik', 'Ortalama Oturum Süresi', reports.analytics.avgSessionTime],
-      ['Analitik', 'Çıkış Oranı', reports.analytics.bounceRate],
-      ['Analitik', 'Geri Dönen Ziyaretçi', reports.analytics.returnVisitors]
+      ['Kullanıcılar', 'Toplam Kullanıcı', reports.totalUsers],
+      ['Oyunlar', 'Toplam Oynanma', reports.totalGamesPlayed],
+      ['Oyunlar', 'Ortalama Skor', reports.averageScore],
+      ['Görüntüleme', 'Toplam Görüntüleme', reports.totalViews],
+      ['Analitik', 'En Popüler Kitap', reports.mostPopularBooks[0]?.title || 'N/A'],
+      ['Analitik', 'En Çok Oynanan Oyun', reports.mostPlayedGames[0]?.name || 'N/A']
     ];
 
     const csvContent = data.map(row => row.join(',')).join('\n');
@@ -73,7 +52,7 @@ export default function ReportsPage() {
     const link = document.createElement('a');
     const url = URL.createObjectURL(blob);
     link.setAttribute('href', url);
-    link.setAttribute('download', 'rapor.csv');
+    link.setAttribute('download', `rapor_${new Date().toISOString().split('T')[0]}.csv`);
     link.style.visibility = 'hidden';
     document.body.appendChild(link);
     link.click();
@@ -84,455 +63,324 @@ export default function ReportsPage() {
     <div style={{
       padding: '20px',
       background: '#f8f9fa',
-      minHeight: '100vh'
+      minHeight: '100vh',
+      fontFamily: 'ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Arial, Noto Sans'
     }}>
       <div style={{
-        display: 'flex',
-        justifyContent: 'space-between',
-        alignItems: 'center',
-        marginBottom: '30px'
-      }}>
-        <h1 style={{
-          fontSize: '2rem',
-          fontWeight: '700',
-          color: '#1f2937',
-          margin: '0'
-        }}>📈 Raporlar ve Analitik</h1>
-        <div style={{
-          display: 'flex',
-          gap: '12px',
-          alignItems: 'center'
-        }}>
-          <select
-            value={selectedPeriod}
-            onChange={(e) => setSelectedPeriod(e.target.value)}
-            style={{
-              padding: '8px 12px',
-              border: '2px solid #e5e7eb',
-              borderRadius: '6px',
-              fontSize: '0.9rem',
-              background: 'white',
-              cursor: 'pointer'
-            }}
-          >
-            <option value="week">Son Hafta</option>
-            <option value="month">Son Ay</option>
-            <option value="quarter">Son Çeyrek</option>
-            <option value="year">Son Yıl</option>
-          </select>
-          <button
-            onClick={exportToExcel}
-            style={{
-              background: 'linear-gradient(135deg, #10b981, #059669)',
-              color: 'white',
-              border: 'none',
-              padding: '8px 16px',
-              borderRadius: '6px',
-              fontSize: '0.9rem',
-              fontWeight: '500',
-              cursor: 'pointer'
-            }}
-          >
-            📊 Excel'e Aktar
-          </button>
-        </div>
-      </div>
-
-      {/* Key Metrics */}
-      <div style={{
-        display: 'grid',
-        gridTemplateColumns: 'repeat(auto-fit, minmax(250px, 1fr))',
-        gap: '20px',
+        background: 'white',
+        borderRadius: '12px',
+        padding: '30px',
+        boxShadow: '0 4px 6px rgba(0, 0, 0, 0.1)',
         marginBottom: '30px'
       }}>
         <div style={{
-          background: 'white',
-          borderRadius: '12px',
-          padding: '24px',
-          boxShadow: '0 4px 6px rgba(0, 0, 0, 0.05)',
-          border: '1px solid #e5e7eb',
           display: 'flex',
+          justifyContent: 'space-between',
           alignItems: 'center',
-          gap: '16px'
+          marginBottom: '30px'
         }}>
-          <div style={{
-            width: '48px',
-            height: '48px',
-            background: 'linear-gradient(135deg, #667eea, #764ba2)',
-            borderRadius: '12px',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            fontSize: '1.5rem'
-          }}>👥</div>
-          <div>
-            <h3 style={{
-              fontSize: '0.9rem',
-              color: '#6b7280',
-              margin: '0 0 4px 0',
-              fontWeight: '500'
-            }}>Toplam Kullanıcı</h3>
-            <div style={{
-              fontSize: '2rem',
-              fontWeight: '700',
-              color: '#1f2937'
-            }}>{reports.users.totalUsers.toLocaleString()}</div>
-          </div>
-        </div>
-
-        <div style={{
-          background: 'white',
-          borderRadius: '12px',
-          padding: '24px',
-          boxShadow: '0 4px 6px rgba(0, 0, 0, 0.05)',
-          border: '1px solid #e5e7eb',
-          display: 'flex',
-          alignItems: 'center',
-          gap: '16px'
-        }}>
-          <div style={{
-            width: '48px',
-            height: '48px',
-            background: 'linear-gradient(135deg, #667eea, #764ba2)',
-            borderRadius: '12px',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            fontSize: '1.5rem'
-          }}>👁️</div>
-          <div>
-            <h3 style={{
-              fontSize: '0.9rem',
-              color: '#6b7280',
-              margin: '0 0 4px 0',
-              fontWeight: '500'
-            }}>Toplam Görüntüleme</h3>
-            <div style={{
-              fontSize: '2rem',
-              fontWeight: '700',
-              color: '#1f2937'
-            }}>{reports.engagement.totalViews.toLocaleString()}</div>
-          </div>
-        </div>
-
-        <div style={{
-          background: 'white',
-          borderRadius: '12px',
-          padding: '24px',
-          boxShadow: '0 4px 6px rgba(0, 0, 0, 0.05)',
-          border: '1px solid #e5e7eb',
-          display: 'flex',
-          alignItems: 'center',
-          gap: '16px'
-        }}>
-          <div style={{
-            width: '48px',
-            height: '48px',
-            background: 'linear-gradient(135deg, #667eea, #764ba2)',
-            borderRadius: '12px',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            fontSize: '1.5rem'
-          }}>🎮</div>
-          <div>
-            <h3 style={{
-              fontSize: '0.9rem',
-              color: '#6b7280',
-              margin: '0 0 4px 0',
-              fontWeight: '500'
-            }}>Toplam Oynanma</h3>
-            <div style={{
-              fontSize: '2rem',
-              fontWeight: '700',
-              color: '#1f2937'
-            }}>{reports.games.totalPlays.toLocaleString()}</div>
-          </div>
-        </div>
-
-        <div style={{
-          background: 'white',
-          borderRadius: '12px',
-          padding: '24px',
-          boxShadow: '0 4px 6px rgba(0, 0, 0, 0.05)',
-          border: '1px solid #e5e7eb',
-          display: 'flex',
-          alignItems: 'center',
-          gap: '16px'
-        }}>
-          <div style={{
-            width: '48px',
-            height: '48px',
-            background: 'linear-gradient(135deg, #667eea, #764ba2)',
-            borderRadius: '12px',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            fontSize: '1.5rem'
-          }}>⭐</div>
-          <div>
-            <h3 style={{
-              fontSize: '0.9rem',
-              color: '#6b7280',
-              margin: '0 0 4px 0',
-              fontWeight: '500'
-            }}>Ortalama Skor</h3>
-            <div style={{
-              fontSize: '2rem',
-              fontWeight: '700',
-              color: '#1f2937'
-            }}>{reports.games.avgScore}</div>
-          </div>
-        </div>
-      </div>
-
-      {/* Charts Section */}
-      <div style={{
-        display: 'grid',
-        gridTemplateColumns: 'repeat(auto-fit, minmax(400px, 1fr))',
-        gap: '20px',
-        marginBottom: '30px'
-      }}>
-        <div style={{
-          background: 'white',
-          borderRadius: '12px',
-          padding: '24px',
-          boxShadow: '0 4px 6px rgba(0, 0, 0, 0.05)',
-          border: '1px solid #e5e7eb'
-        }}>
-          <h3 style={{
-            fontSize: '1.2rem',
-            fontWeight: '600',
-            color: '#1f2937',
-            margin: '0 0 20px 0'
-          }}>En Popüler Kitaplar</h3>
-          <div style={{
-            display: 'flex',
-            flexDirection: 'column',
-            gap: '12px'
+          <h1 style={{
+            margin: '0',
+            fontSize: '2rem',
+            fontWeight: '700',
+            color: '#1f2937'
           }}>
-            {reports.engagement.topViewedBooks.map((book, index) => (
-              <div key={index} style={{
+            📈 Raporlar ve Analitik
+          </h1>
+          <div style={{ display: 'flex', gap: '15px', alignItems: 'center' }}>
+            <select
+              value={selectedPeriod}
+              onChange={(e) => setSelectedPeriod(e.target.value)}
+              style={{
+                padding: '8px 12px',
+                border: '2px solid #e5e7eb',
+                borderRadius: '8px',
+                fontSize: '0.9rem',
+                background: 'white'
+              }}
+            >
+              <option value="week">Son Hafta</option>
+              <option value="month">Son Ay</option>
+              <option value="quarter">Son 3 Ay</option>
+              <option value="year">Son Yıl</option>
+            </select>
+            <button
+              onClick={exportToExcel}
+              style={{
+                background: 'linear-gradient(135deg, #059669, #047857)',
+                color: 'white',
+                border: 'none',
+                padding: '10px 20px',
+                borderRadius: '8px',
+                fontSize: '0.9rem',
+                fontWeight: '600',
+                cursor: 'pointer',
                 display: 'flex',
-                justifyContent: 'space-between',
                 alignItems: 'center',
-                padding: '12px',
-                background: '#f8f9fa',
-                borderRadius: '8px'
-              }}>
-                <div>
-                  <div style={{
-                    fontWeight: '500',
-                    color: '#1f2937',
-                    marginBottom: '2px'
-                  }}>{book.name}</div>
-                  <div style={{
-                    fontSize: '0.8rem',
-                    color: '#6b7280'
-                  }}>{book.interactions} etkileşim</div>
-                </div>
-                <div style={{
-                  background: '#dbeafe',
-                  color: '#1e40af',
-                  padding: '4px 8px',
-                  borderRadius: '4px',
-                  fontSize: '0.8rem',
-                  fontWeight: '500'
-                }}>
-                  {book.views} görüntüleme
-                </div>
-              </div>
-            ))}
+                gap: '8px'
+              }}
+            >
+              📊 Excel'e Aktar
+            </button>
           </div>
         </div>
 
+        {/* Ana Metrikler */}
         <div style={{
-          background: 'white',
-          borderRadius: '12px',
-          padding: '24px',
-          boxShadow: '0 4px 6px rgba(0, 0, 0, 0.05)',
-          border: '1px solid #e5e7eb'
+          display: 'grid',
+          gridTemplateColumns: 'repeat(auto-fit, minmax(250px, 1fr))',
+          gap: '20px',
+          marginBottom: '40px'
         }}>
-          <h3 style={{
-            fontSize: '1.2rem',
-            fontWeight: '600',
-            color: '#1f2937',
-            margin: '0 0 20px 0'
-          }}>En Çok Oynanan Oyunlar</h3>
           <div style={{
-            display: 'flex',
-            flexDirection: 'column',
-            gap: '12px'
+            background: 'linear-gradient(135deg, #3b82f6, #1d4ed8)',
+            color: 'white',
+            padding: '25px',
+            borderRadius: '12px',
+            textAlign: 'center'
           }}>
-            {reports.games.mostPlayedGames.map((game, index) => (
-              <div key={index} style={{
-                display: 'flex',
-                justifyContent: 'space-between',
-                alignItems: 'center',
-                padding: '12px',
-                background: '#f8f9fa',
-                borderRadius: '8px'
-              }}>
-                <div>
-                  <div style={{
-                    fontWeight: '500',
-                    color: '#1f2937',
-                    marginBottom: '2px'
-                  }}>{game.name}</div>
-                  <div style={{
-                    fontSize: '0.8rem',
-                    color: '#6b7280'
-                  }}>{game.avgScore} ortalama skor</div>
-                </div>
-                <div style={{
-                  background: '#dcfce7',
-                  color: '#166534',
-                  padding: '4px 8px',
-                  borderRadius: '4px',
-                  fontSize: '0.8rem',
-                  fontWeight: '500'
-                }}>
-                  {game.plays} oynanma
-                </div>
-              </div>
-            ))}
+            <div style={{ fontSize: '2.5rem', fontWeight: 'bold', marginBottom: '8px' }}>
+              {reports.totalUsers.toLocaleString()}
+            </div>
+            <div style={{ fontSize: '1rem', opacity: 0.9 }}>Toplam Kullanıcı</div>
+          </div>
+
+          <div style={{
+            background: 'linear-gradient(135deg, #10b981, #059669)',
+            color: 'white',
+            padding: '25px',
+            borderRadius: '12px',
+            textAlign: 'center'
+          }}>
+            <div style={{ fontSize: '2.5rem', fontWeight: 'bold', marginBottom: '8px' }}>
+              {reports.totalGamesPlayed.toLocaleString()}
+            </div>
+            <div style={{ fontSize: '1rem', opacity: 0.9 }}>Toplam Oynanma</div>
+          </div>
+
+          <div style={{
+            background: 'linear-gradient(135deg, #f59e0b, #d97706)',
+            color: 'white',
+            padding: '25px',
+            borderRadius: '12px',
+            textAlign: 'center'
+          }}>
+            <div style={{ fontSize: '2.5rem', fontWeight: 'bold', marginBottom: '8px' }}>
+              {reports.averageScore}%
+            </div>
+            <div style={{ fontSize: '1rem', opacity: 0.9 }}>Ortalama Skor</div>
+          </div>
+
+          <div style={{
+            background: 'linear-gradient(135deg, #8b5cf6, #7c3aed)',
+            color: 'white',
+            padding: '25px',
+            borderRadius: '12px',
+            textAlign: 'center'
+          }}>
+            <div style={{ fontSize: '2.5rem', fontWeight: 'bold', marginBottom: '8px' }}>
+              {reports.totalViews.toLocaleString()}
+            </div>
+            <div style={{ fontSize: '1rem', opacity: 0.9 }}>Toplam Görüntüleme</div>
           </div>
         </div>
-      </div>
 
-      {/* Analytics Section */}
-      <div style={{
-        display: 'grid',
-        gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))',
-        gap: '20px'
-      }}>
+        {/* En Popüler Kitaplar */}
         <div style={{
           background: 'white',
           borderRadius: '12px',
-          padding: '24px',
-          boxShadow: '0 4px 6px rgba(0, 0, 0, 0.05)',
+          padding: '25px',
+          marginBottom: '30px',
           border: '1px solid #e5e7eb'
         }}>
-          <h3 style={{
-            fontSize: '1.2rem',
+          <h2 style={{
+            margin: '0 0 20px 0',
+            fontSize: '1.5rem',
             fontWeight: '600',
-            color: '#1f2937',
-            margin: '0 0 20px 0'
-          }}>Kullanıcı Analitikleri</h3>
-          <div style={{
-            display: 'flex',
-            flexDirection: 'column',
-            gap: '16px'
+            color: '#1f2937'
           }}>
-            <div style={{
-              display: 'flex',
-              justifyContent: 'space-between',
-              alignItems: 'center',
-              padding: '12px',
-              background: '#f8f9fa',
-              borderRadius: '8px'
-            }}>
-              <span style={{
-                fontSize: '0.9rem',
-                color: '#6b7280'
-              }}>Ortalama Oturum Süresi</span>
-              <span style={{
-                fontSize: '1.1rem',
-                fontWeight: '600',
-                color: '#1f2937'
-              }}>{reports.analytics.avgSessionTime}</span>
+            📚 En Popüler Kitaplar
+          </h2>
+          {reports.mostPopularBooks.length > 0 ? (
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '15px' }}>
+              {reports.mostPopularBooks.map((book, index) => (
+                <div key={book.bookId} style={{
+                  display: 'flex',
+                  justifyContent: 'space-between',
+                  alignItems: 'center',
+                  padding: '15px',
+                  background: '#f8f9fa',
+                  borderRadius: '8px',
+                  border: '1px solid #e5e7eb'
+                }}>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '15px' }}>
+                    <div style={{
+                      width: '30px',
+                      height: '30px',
+                      background: 'linear-gradient(135deg, #3b82f6, #1d4ed8)',
+                      color: 'white',
+                      borderRadius: '50%',
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      fontWeight: 'bold',
+                      fontSize: '0.9rem'
+                    }}>
+                      {index + 1}
+                    </div>
+                    <div>
+                      <div style={{ fontWeight: '600', color: '#1f2937', marginBottom: '4px' }}>
+                        {book.title}
+                      </div>
+                      <div style={{ fontSize: '0.9rem', color: '#6b7280' }}>
+                        {book.views} görüntüleme • {book.gamesPlayed} oyun
+                      </div>
+                    </div>
+                  </div>
+                  <div style={{
+                    background: '#e0f2fe',
+                    color: '#0369a1',
+                    padding: '6px 12px',
+                    borderRadius: '20px',
+                    fontSize: '0.8rem',
+                    fontWeight: '600'
+                  }}>
+                    {book.views + book.gamesPlayed} toplam
+                  </div>
+                </div>
+              ))}
             </div>
+          ) : (
             <div style={{
-              display: 'flex',
-              justifyContent: 'space-between',
-              alignItems: 'center',
-              padding: '12px',
-              background: '#f8f9fa',
-              borderRadius: '8px'
+              textAlign: 'center',
+              padding: '40px',
+              color: '#6b7280',
+              fontSize: '1.1rem'
             }}>
-              <span style={{
-                fontSize: '0.9rem',
-                color: '#6b7280'
-              }}>Çıkış Oranı</span>
-              <span style={{
-                fontSize: '1.1rem',
-                fontWeight: '600',
-                color: '#1f2937'
-              }}>{reports.analytics.bounceRate}</span>
+              Henüz veri bulunmuyor
             </div>
+          )}
+        </div>
+
+        {/* En Çok Oynanan Oyunlar */}
+        <div style={{
+          background: 'white',
+          borderRadius: '12px',
+          padding: '25px',
+          marginBottom: '30px',
+          border: '1px solid #e5e7eb'
+        }}>
+          <h2 style={{
+            margin: '0 0 20px 0',
+            fontSize: '1.5rem',
+            fontWeight: '600',
+            color: '#1f2937'
+          }}>
+            🎮 En Çok Oynanan Oyunlar
+          </h2>
+          {reports.mostPlayedGames.length > 0 ? (
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '15px' }}>
+              {reports.mostPlayedGames.map((game, index) => (
+                <div key={game.gameId} style={{
+                  display: 'flex',
+                  justifyContent: 'space-between',
+                  alignItems: 'center',
+                  padding: '15px',
+                  background: '#f8f9fa',
+                  borderRadius: '8px',
+                  border: '1px solid #e5e7eb'
+                }}>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '15px' }}>
+                    <div style={{
+                      width: '30px',
+                      height: '30px',
+                      background: 'linear-gradient(135deg, #10b981, #059669)',
+                      color: 'white',
+                      borderRadius: '50%',
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      fontWeight: 'bold',
+                      fontSize: '0.9rem'
+                    }}>
+                      {index + 1}
+                    </div>
+                    <div>
+                      <div style={{ fontWeight: '600', color: '#1f2937', marginBottom: '4px' }}>
+                        {game.name}
+                      </div>
+                      <div style={{ fontSize: '0.9rem', color: '#6b7280' }}>
+                        {game.plays} oynanma • Ortalama: {game.avgScore}%
+                      </div>
+                    </div>
+                  </div>
+                  <div style={{
+                    background: '#dcfce7',
+                    color: '#166534',
+                    padding: '6px 12px',
+                    borderRadius: '20px',
+                    fontSize: '0.8rem',
+                    fontWeight: '600'
+                  }}>
+                    {game.plays} oyun
+                  </div>
+                </div>
+              ))}
+            </div>
+          ) : (
             <div style={{
-              display: 'flex',
-              justifyContent: 'space-between',
-              alignItems: 'center',
-              padding: '12px',
-              background: '#f8f9fa',
-              borderRadius: '8px'
+              textAlign: 'center',
+              padding: '40px',
+              color: '#6b7280',
+              fontSize: '1.1rem'
             }}>
-              <span style={{
-                fontSize: '0.9rem',
-                color: '#6b7280'
-              }}>Geri Dönen Ziyaretçi</span>
-              <span style={{
-                fontSize: '1.1rem',
-                fontWeight: '600',
-                color: '#1f2937'
-              }}>{reports.analytics.returnVisitors}</span>
+              Henüz veri bulunmuyor
+            </div>
+          )}
+        </div>
+
+        {/* Kullanıcı Büyümesi */}
+        {reports.userGrowth.length > 0 && (
+          <div style={{
+            background: 'white',
+            borderRadius: '12px',
+            padding: '25px',
+            border: '1px solid #e5e7eb'
+          }}>
+            <h2 style={{
+              margin: '0 0 20px 0',
+              fontSize: '1.5rem',
+              fontWeight: '600',
+              color: '#1f2937'
+            }}>
+              📈 Kullanıcı Büyümesi
+            </h2>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
+              {reports.userGrowth.map((growth, index) => (
+                <div key={growth.month} style={{
+                  display: 'flex',
+                  justifyContent: 'space-between',
+                  alignItems: 'center',
+                  padding: '12px 15px',
+                  background: '#f8f9fa',
+                  borderRadius: '8px'
+                }}>
+                  <span style={{ fontWeight: '500', color: '#1f2937' }}>{growth.month}</span>
+                  <div style={{
+                    background: 'linear-gradient(135deg, #3b82f6, #1d4ed8)',
+                    color: 'white',
+                    padding: '4px 12px',
+                    borderRadius: '20px',
+                    fontSize: '0.9rem',
+                    fontWeight: '600'
+                  }}>
+                    +{growth.users} kullanıcı
+                  </div>
+                </div>
+              ))}
             </div>
           </div>
-        </div>
-
-        <div style={{
-          background: 'white',
-          borderRadius: '12px',
-          padding: '24px',
-          boxShadow: '0 4px 6px rgba(0, 0, 0, 0.05)',
-          border: '1px solid #e5e7eb'
-        }}>
-          <h3 style={{
-            fontSize: '1.2rem',
-            fontWeight: '600',
-            color: '#1f2937',
-            margin: '0 0 20px 0'
-          }}>Favori Kategoriler</h3>
-          <div style={{
-            display: 'flex',
-            flexDirection: 'column',
-            gap: '12px'
-          }}>
-            {reports.analytics.favoriteCategories.map((category, index) => (
-              <div key={index} style={{
-                display: 'flex',
-                justifyContent: 'space-between',
-                alignItems: 'center',
-                padding: '12px',
-                background: '#f8f9fa',
-                borderRadius: '8px'
-              }}>
-                <div>
-                  <div style={{
-                    fontWeight: '500',
-                    color: '#1f2937',
-                    marginBottom: '2px'
-                  }}>{category.category}</div>
-                  <div style={{
-                    fontSize: '0.8rem',
-                    color: '#6b7280'
-                  }}>{category.users} kullanıcı</div>
-                </div>
-                <div style={{
-                  background: '#dbeafe',
-                  color: '#1e40af',
-                  padding: '4px 8px',
-                  borderRadius: '4px',
-                  fontSize: '0.8rem',
-                  fontWeight: '500'
-                }}>
-                  %{category.percentage}
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
+        )}
       </div>
     </div>
   );

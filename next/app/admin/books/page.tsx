@@ -1,7 +1,9 @@
 "use client";
 import { useState, useEffect } from 'react';
+import { useRouter } from 'next/navigation';
 
 export default function BookManagement() {
+  const router = useRouter();
   const [books, setBooks] = useState([
     {
       id: 1,
@@ -94,6 +96,21 @@ export default function BookManagement() {
     buyLink: '',
     description: ''
   });
+
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      // Gizli admin URL kontrolü
+      const urlParams = new URLSearchParams(window.location.search);
+      const secretKey = urlParams.get('key');
+      const validSecretKey = 'odtu-admin-2024-secret';
+      
+      if (secretKey !== validSecretKey) {
+        // Yanlış veya eksik key - 404 sayfasına yönlendir
+        router.push('/404');
+        return;
+      }
+    }
+  }, [router]);
 
   const handleAddBook = () => {
     const book = {

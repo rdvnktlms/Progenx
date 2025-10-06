@@ -1,23 +1,49 @@
 "use client";
-import { useState } from 'react';
+import React, { useState } from 'react';
 import { useRouter } from 'next/navigation';
 
 export default function AdminLoginPage() {
   const [credentials, setCredentials] = useState({
     username: '',
-    password: ''
+    password: '',
+    adminCode: ''
   });
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState('');
+  const [showLogin, setShowLogin] = useState(false);
   const router = useRouter();
+
+  // Gizli admin URL kontrolü
+  const checkAdminAccess = () => {
+    const urlParams = new URLSearchParams(window.location.search);
+    const secretKey = urlParams.get('key');
+    const validSecretKey = 'odtu-admin-2024-secret';
+    
+    if (secretKey === validSecretKey) {
+      setShowLogin(true);
+    } else {
+      // Yanlış veya eksik key - 404 sayfasına yönlendir
+      router.push('/404');
+    }
+  };
+
+  // Component mount olduğunda kontrol et
+  React.useEffect(() => {
+    checkAdminAccess();
+  }, []);
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsLoading(true);
     setError('');
 
-    // Demo admin credentials
-    if (credentials.username === 'admin' && credentials.password === 'odtu2024') {
+    // Gizli admin kodu kontrolü
+    const validAdminCode = 'ODTU2024ADMIN';
+    
+    // Demo admin credentials + gizli kod
+    if (credentials.username === 'admin' && 
+        credentials.password === 'odtu2024' && 
+        credentials.adminCode === validAdminCode) {
       // Simulate API call
       await new Promise(resolve => setTimeout(resolve, 1000));
       
@@ -29,13 +55,35 @@ export default function AdminLoginPage() {
       };
       
       localStorage.setItem('adminAuth', JSON.stringify(authData));
-      router.push('/admin/dashboard');
+      router.push('/admin/dashboard?key=odtu-admin-2024-secret');
     } else {
-      setError('Kullanıcı adı veya şifre hatalı!');
+      setError('Giriş bilgileri hatalı! Lütfen tüm alanları doğru doldurun.');
     }
     
     setIsLoading(false);
   };
+
+  // Eğer geçerli key yoksa loading göster
+  if (!showLogin) {
+    return (
+      <div style={{
+        minHeight: '100vh',
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        background: 'linear-gradient(135deg, #667eea, #764ba2)',
+        fontFamily: 'ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Arial, Noto Sans'
+      }}>
+        <div style={{
+          color: 'white',
+          fontSize: '1.2rem',
+          textAlign: 'center'
+        }}>
+          Yükleniyor...
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div style={{
@@ -141,6 +189,33 @@ export default function AdminLoginPage() {
             />
           </div>
 
+          <div style={{ textAlign: 'left' }}>
+            <label style={{
+              display: 'block',
+              marginBottom: '8px',
+              color: '#374151',
+              fontWeight: '600',
+              fontSize: '0.9rem'
+            }} htmlFor="adminCode">Admin Kodu</label>
+            <input
+              type="password"
+              id="adminCode"
+              value={credentials.adminCode}
+              onChange={(e) => setCredentials(prev => ({ ...prev, adminCode: e.target.value }))}
+              placeholder="Gizli admin kodu"
+              required
+              style={{
+                width: '100%',
+                padding: '12px 16px',
+                border: '2px solid #e5e7eb',
+                borderRadius: '8px',
+                fontSize: '1rem',
+                transition: 'all 0.3s ease',
+                boxSizing: 'border-box'
+              }}
+            />
+          </div>
+
           {error && (
             <div style={{
               background: '#fee2e2',
@@ -192,10 +267,15 @@ export default function AdminLoginPage() {
             fontSize: '0.9rem'
           }}><strong style={{ color: '#1f2937' }}>Kullanıcı Adı:</strong> admin</p>
           <p style={{
-            margin: '0',
+            margin: '0 0 8px 0',
             color: '#6b7280',
             fontSize: '0.9rem'
           }}><strong style={{ color: '#1f2937' }}>Şifre:</strong> odtu2024</p>
+          <p style={{
+            margin: '0',
+            color: '#6b7280',
+            fontSize: '0.9rem'
+          }}><strong style={{ color: '#1f2937' }}>Admin Kodu:</strong> ODTU2024ADMIN</p>
         </div>
       </div>
     </div>

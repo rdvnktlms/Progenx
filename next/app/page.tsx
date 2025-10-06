@@ -1,6 +1,7 @@
 "use client";
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
+import { recordPageView } from './utils/analytics';
 
 export default function Page(){
   const [favorites, setFavorites] = useState<number[]>([]);
@@ -20,6 +21,9 @@ export default function Page(){
       if (savedWishlist) {
         setWishlist(JSON.parse(savedWishlist));
       }
+      
+      // Sayfa görüntüleme kaydı
+      recordPageView('/', 'guest', 0);
     }
   }, []);
 
