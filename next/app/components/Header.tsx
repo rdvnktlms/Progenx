@@ -16,25 +16,27 @@ function Header() {
       </a>
       <nav className="nav">
         <a href="/">Ana Sayfa</a>
-        <div className="user-dropdown">
-          <button 
-            className="user-btn"
-            onClick={() => setShowDropdown(!showDropdown)}
-          >
-            <div className="user-avatar">
-              {user ? user.avatar : '👤'}
-            </div>
-            <div className="user-info">
-              <span className="user-name">
-                {user ? user.name : 'Giriş Yap'}
-              </span>
-              <span className="user-status">
-                {user ? 'Giriş Yapmış' : 'Misafir'}
-              </span>
-            </div>
-            <span className="dropdown-arrow">▼</span>
-          </button>
-          {showDropdown && (
+        <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+          <div className="user-avatar">
+            {user ? user.avatar : '👤'}
+          </div>
+          <div className="user-dropdown">
+            <button 
+              className="user-btn"
+              onClick={() => setShowDropdown(!showDropdown)}
+              style={{ minWidth: 'auto', padding: '8px 16px' }}
+            >
+              <div className="user-info">
+                <span className="user-name">
+                  {user ? user.name : 'Giriş Yap'}
+                </span>
+                <span className="user-status">
+                  {user ? user.email : ''}
+                </span>
+              </div>
+              <span className="dropdown-arrow">▼</span>
+            </button>
+            {showDropdown && (
             <div className="dropdown-menu">
               {user ? (
                 <>
@@ -81,6 +83,7 @@ function Header() {
               )}
             </div>
           )}
+          </div>
         </div>
       </nav>
     </header>

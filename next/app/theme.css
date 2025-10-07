@@ -1,5 +1,31 @@
 @import url('https://fonts.googleapis.com/css?family=Fredoka+One&display=swap');
 
+/* Progenx Saat Logo Background - Tüm sayfalarda %50 transparan */
+body {
+  position: relative;
+}
+
+body::before {
+  content: '';
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-image: url('/img/Progenx_Saat_logo.svg');
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: 600px 600px;
+  opacity: 0.5;
+  z-index: -1;
+  pointer-events: none;
+}
+
+/* 404 sayfası için logo'yu gizle */
+.page_404::before {
+  display: none;
+}
+
 :root{
   --bg:#ffffff; --text:#222; --muted:#6b7280; --card:#ffffff;
   --primary:rgb(205, 23, 25); --primary-600:rgb(180, 20, 22); --green:#79d16b; --sky:#7fd3ff; --pink:#ff89c1;
@@ -21,16 +47,16 @@ body{margin:0;font-family:ui-sans-serif,system-ui,-apple-system,Segoe UI,Roboto,
 .user-dropdown{position:relative}
 .user-btn{background:none;border:none;color:var(--text);padding:8px 16px;border-radius:12px;font-weight:500;cursor:pointer;display:flex;align-items:center;gap:12px;transition:all 0.2s ease;font-size:inherit;font-family:inherit;min-width:200px}
 .user-btn:hover{background:var(--ring);transform:translateY(-1px)}
-.user-avatar{width:32px;height:32px;background:linear-gradient(135deg,rgb(205, 23, 25),rgb(180, 20, 22));border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:16px;color:white}
+.user-btn:hover .dropdown-arrow{transform:rotate(180deg)}
+.user-btn:hover + .dropdown-menu{opacity:1;visibility:visible;transform:translateY(0)}
+.user-avatar{width:32px;height:32px;background:rgb(0, 118, 128);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:16px;color:white}
 .user-info{display:flex;flex-direction:column;align-items:flex-start;gap:2px}
 .user-name{font-weight:600;font-size:14px;color:var(--text)}
 .user-status{font-size:12px;color:var(--muted)}
 .dropdown-arrow{font-size:10px;transition:transform 0.2s ease;margin-left:auto}
-.user-dropdown:hover .dropdown-arrow{transform:rotate(180deg)}
 .dropdown-menu{position:absolute;top:100%;right:0;background:white;border-radius:16px;box-shadow:0 12px 40px rgba(0,0,0,0.15);border:1px solid #e2e8f0;min-width:280px;opacity:0;visibility:hidden;transform:translateY(-10px);transition:all 0.3s ease;z-index:1000;margin-top:8px;overflow:hidden}
-.user-dropdown:hover .dropdown-menu{opacity:1;visibility:visible;transform:translateY(0)}
 .dropdown-header{padding:20px;background:linear-gradient(135deg,#f8fafc,#e2e8f0);display:flex;align-items:center;gap:12px;border-bottom:1px solid #e2e8f0}
-.user-avatar-large{width:48px;height:48px;background:linear-gradient(135deg,rgb(205, 23, 25),rgb(180, 20, 22));border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:20px;color:white}
+.user-avatar-large{width:48px;height:48px;background:rgb(0, 118, 128);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:20px;color:white}
 .user-details{display:flex;flex-direction:column;gap:4px}
 .user-name-large{font-weight:700;font-size:16px;color:var(--text)}
 .user-email{font-size:13px;color:var(--muted)}
@@ -2137,7 +2163,7 @@ body{margin:0;font-family:ui-sans-serif,system-ui,-apple-system,Segoe UI,Roboto,
 .profile-avatar-large {
   width: 64px;
   height: 64px;
-  background: linear-gradient(135deg, rgb(205, 23, 25), rgb(180, 20, 22));
+  background: rgb(0, 118, 128);
   border-radius: 50%;
   display: flex;
   align-items: center;
@@ -3595,7 +3621,7 @@ input:checked + .slider:before {
 .user-avatar {
   width: 40px;
   height: 40px;
-  background: linear-gradient(135deg, rgb(205, 23, 25), rgb(180, 20, 22));
+  background: rgb(0, 118, 128);
   color: white;
   border-radius: 50%;
   display: flex;

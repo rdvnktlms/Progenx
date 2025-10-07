@@ -85,7 +85,7 @@ export default function AdminDashboard() {
           <button
             onClick={clearTestData}
             style={{
-              background: 'linear-gradient(135deg, #ef4444, #dc2626)',
+              background: 'linear-gradient(135deg, #8b5cf6, #7c3aed)',
               color: 'white',
               border: 'none',
               padding: '8px 16px',

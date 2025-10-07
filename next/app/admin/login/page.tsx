@@ -248,35 +248,6 @@ export default function AdminLoginPage() {
           </button>
         </form>
 
-        <div style={{
-          marginTop: '30px',
-          padding: '20px',
-          background: '#f8f9fa',
-          borderRadius: '8px',
-          textAlign: 'left'
-        }}>
-          <h3 style={{
-            margin: '0 0 15px 0',
-            color: '#374151',
-            fontSize: '1rem',
-            fontWeight: '600'
-          }}>Demo Giriş Bilgileri:</h3>
-          <p style={{
-            margin: '0 0 8px 0',
-            color: '#6b7280',
-            fontSize: '0.9rem'
-          }}><strong style={{ color: '#1f2937' }}>Kullanıcı Adı:</strong> admin</p>
-          <p style={{
-            margin: '0 0 8px 0',
-            color: '#6b7280',
-            fontSize: '0.9rem'
-          }}><strong style={{ color: '#1f2937' }}>Şifre:</strong> odtu2024</p>
-          <p style={{
-            margin: '0',
-            color: '#6b7280',
-            fontSize: '0.9rem'
-          }}><strong style={{ color: '#1f2937' }}>Admin Kodu:</strong> ODTU2024ADMIN</p>
-        </div>
       </div>
     </div>
   );

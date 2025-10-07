@@ -32,9 +32,6 @@ export default function LoginPage() {
     }));
   };
 
-  const fillTestAccount = (email: string, password: string) => {
-    setFormData({ email, password });
-  };
 
   return (
     <div style={{
@@ -184,104 +181,6 @@ export default function LoginPage() {
             </p>
           </div>
 
-          {/* Test Hesapları */}
-          <div style={{
-            marginTop: '30px',
-            padding: '20px',
-            background: '#f8f9fa',
-            borderRadius: '12px',
-            border: '1px solid #e5e7eb'
-          }}>
-            <h4 style={{
-              fontSize: '1rem',
-              fontWeight: '600',
-              color: '#374151',
-              margin: '0 0 15px 0',
-              textAlign: 'center'
-            }}>
-              🧪 Test Hesapları
-            </h4>
-            <div style={{
-              display: 'grid',
-              gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))',
-              gap: '10px'
-            }}>
-              <div style={{
-                padding: '12px',
-                background: 'white',
-                borderRadius: '8px',
-                border: '1px solid #d1d5db',
-                cursor: 'pointer',
-                transition: 'all 0.2s ease'
-              }}
-              onClick={() => fillTestAccount('ahmet@example.com', '123456')}
-              onMouseOver={(e) => {
-                e.currentTarget.style.borderColor = '#10b981';
-                e.currentTarget.style.transform = 'translateY(-2px)';
-              }}
-              onMouseOut={(e) => {
-                e.currentTarget.style.borderColor = '#d1d5db';
-                e.currentTarget.style.transform = 'translateY(0)';
-              }}
-              >
-                <div style={{ fontWeight: '600', color: '#059669', fontSize: '0.9rem', marginBottom: '4px' }}>📚 Tüm Kitaplar</div>
-                <div style={{ fontSize: '0.8rem', color: '#6b7280' }}>ahmet@example.com</div>
-                <div style={{ fontSize: '0.8rem', color: '#6b7280' }}>Şifre: 123456</div>
-              </div>
-              <div style={{
-                padding: '12px',
-                background: 'white',
-                borderRadius: '8px',
-                border: '1px solid #d1d5db',
-                cursor: 'pointer',
-                transition: 'all 0.2s ease'
-              }}
-              onClick={() => fillTestAccount('elif@example.com', '123456')}
-              onMouseOver={(e) => {
-                e.currentTarget.style.borderColor = '#3b82f6';
-                e.currentTarget.style.transform = 'translateY(-2px)';
-              }}
-              onMouseOut={(e) => {
-                e.currentTarget.style.borderColor = '#d1d5db';
-                e.currentTarget.style.transform = 'translateY(0)';
-              }}
-              >
-                <div style={{ fontWeight: '600', color: '#3b82f6', fontSize: '0.9rem', marginBottom: '4px' }}>📖 Tek Kitap</div>
-                <div style={{ fontSize: '0.8rem', color: '#6b7280' }}>elif@example.com</div>
-                <div style={{ fontSize: '0.8rem', color: '#6b7280' }}>Şifre: 123456</div>
-              </div>
-              <div style={{
-                padding: '12px',
-                background: 'white',
-                borderRadius: '8px',
-                border: '1px solid #d1d5db',
-                cursor: 'pointer',
-                transition: 'all 0.2s ease'
-              }}
-              onClick={() => fillTestAccount('mehmet@example.com', '123456')}
-              onMouseOver={(e) => {
-                e.currentTarget.style.borderColor = '#ef4444';
-                e.currentTarget.style.transform = 'translateY(-2px)';
-              }}
-              onMouseOut={(e) => {
-                e.currentTarget.style.borderColor = '#d1d5db';
-                e.currentTarget.style.transform = 'translateY(0)';
-              }}
-              >
-                <div style={{ fontWeight: '600', color: '#ef4444', fontSize: '0.9rem', marginBottom: '4px' }}>🚫 Kitapsız</div>
-                <div style={{ fontSize: '0.8rem', color: '#6b7280' }}>mehmet@example.com</div>
-                <div style={{ fontSize: '0.8rem', color: '#6b7280' }}>Şifre: 123456</div>
-              </div>
-            </div>
-            <p style={{
-              fontSize: '0.8rem',
-              color: '#6b7280',
-              textAlign: 'center',
-              margin: '15px 0 0 0'
-            }}>
-              Test hesaplarına tıklayarak otomatik doldurun
-            </p>
-          </div>
         </div>
       </div>
     </div>

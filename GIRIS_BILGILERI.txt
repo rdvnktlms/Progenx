@@ -1,0 +1,29 @@
+İNTERAKTİF KİTAP PROJESİ - GİRİŞ BİLGİLERİ
+==========================================
+
+Bu dosya, sayfayı yayına çıkarmadan önce kaldırılan demo giriş bilgilerini içerir.
+
+KALDIRILAN DEMO HESAP BİLGİLERİ:
+================================
+
+1. NORMAL KULLANICI HESAPLARI (Giriş Sayfası):
+   - ahmet@example.com / 123456 (Tüm Kitaplar)
+   - elif@example.com / 123456 (Tek Kitap)
+   - mehmet@example.com / 123456 (Kitapsız)
+
+2. ADMIN HESAP BİLGİLERİ (Admin Giriş Sayfası):
+   - Kullanıcı Adı: admin
+   - Şifre: odtu2024
+   - Admin Kodu: ODTU2024ADMIN
+   - Gizli URL Anahtarı: odtu-admin-2024-secret
+
+ADMIN PANELİ ERİŞİMİ:
+=====================
+Admin paneline erişim için:
+1. URL: /admin/login?key=odtu-admin-2024-secret
+2. Yukarıdaki admin bilgileri ile giriş yapın
+
+NOT: Bu bilgiler sadece geliştirme/test amaçlıydı ve yayın öncesi kaldırılmıştır.
+Yayın sonrası gerçek admin hesabı oluşturulmalıdır.
+
+Tarih: 2024
