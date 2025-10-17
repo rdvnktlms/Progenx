@@ -5,6 +5,7 @@ export interface BookKey {
   title: string;
   isActive: boolean;
   createdAt: string;
+  actualKey?: string; // Admin panelinde oluşturulan gerçek key
 }
 
 // Aktif key'ler - Sadece oluşturulan key'ler
@@ -29,6 +30,13 @@ const ACTIVE_KEYS: BookKey[] = [
     title: 'Benim Küçük Deneylerim',
     isActive: true,
     createdAt: '2024-01-15T10:00:00Z'
+  },
+  {
+    bookId: 'satrancta-tas-alisverisi',
+    keyHash: '36215a3b36215a3b36215a3b36215a3b36215a3b36215a3b36215a3b36215a3b',
+    title: 'Satrançta Taş Alışverişi',
+    isActive: true,
+    createdAt: '2024-01-15T10:00:00Z'
   }
   // Diğer kitaplar için henüz key oluşturulmamış
 ];
@@ -49,13 +57,18 @@ const hashKey = (key: string): string => {
   return (hashStr + hashStr + hashStr + hashStr + hashStr + hashStr + hashStr + hashStr).substring(0, 64);
 };
 
-// Key formatını kontrol et (XXXX-XXXX-XXXX-XXXX)
+// Key formatını kontrol et (XXXX-XXXX-XXXX veya XXXX-XXXX-XXXX-XXXX)
 export const isValidKeyFormat = (key: string): boolean => {
   if (!key) return false;
   
-  // Key formatı: XXXX-XXXX-XXXX-XXXX (büyük harf, tire ile ayrılmış, 16 karakter)
-  const keyPattern = /^[A-Z0-9]{4}-[A-Z0-9]{4}-[A-Z0-9]{4}-[A-Z0-9]{4}$/;
-  return keyPattern.test(key.trim().toUpperCase());
+  const cleanKey = key.trim().toUpperCase();
+  
+  // 12 karakter formatı: XXXX-XXXX-XXXX
+  const pattern12 = /^[A-Z0-9]{4}-[A-Z0-9]{4}-[A-Z0-9]{4}$/;
+  // 16 karakter formatı: XXXX-XXXX-XXXX-XXXX  
+  const pattern16 = /^[A-Z0-9]{4}-[A-Z0-9]{4}-[A-Z0-9]{4}-[A-Z0-9]{4}$/;
+  
+  return pattern12.test(cleanKey) || pattern16.test(cleanKey);
 };
 
 export const verifyKey = (inputKey: string, bookId: string): boolean => {
@@ -73,25 +86,62 @@ export const verifyKey = (inputKey: string, bookId: string): boolean => {
   // Key'i temizle ve büyük harfe çevir
   const cleanKey = inputKey.trim().toUpperCase();
   
-  // Bu kitap için aktif key'i bul
-  const activeKey = ACTIVE_KEYS.find(k => k.bookId === bookId && k.isActive);
+  // Key hash'ini hesapla
+  const inputHash = hashKey(cleanKey);
   
-  if (!activeKey) {
-    console.log('Key verification failed: No active key for book', { bookId });
+  console.log('=== KEY VERIFICATION DEBUG ===');
+  console.log('Input Key:', cleanKey);
+  console.log('Input Hash:', inputHash);
+  console.log('Book ID:', bookId);
+  
+  // Önce localStorage'dan admin panelinde oluşturulan key'leri kontrol et
+  if (typeof window !== 'undefined') {
+    const storedKeys = localStorage.getItem('bookKeys');
+    console.log('localStorage bookKeys:', storedKeys);
+    
+    if (storedKeys) {
+      try {
+        const parsedKeys = JSON.parse(storedKeys);
+        console.log('Parsed keys:', parsedKeys);
+        
+        const matchingKey = parsedKeys.find((k: any) => 
+          k.bookId === bookId && 
+          k.isActive && 
+          k.keyHash === inputHash
+        );
+        
+        console.log('Matching key in localStorage:', matchingKey);
+        
+        if (matchingKey) {
+          console.log('✅ Key verification successful (localStorage)');
+          return true;
+        }
+      } catch (error) {
+        console.error('Error parsing stored keys:', error);
+      }
+    }
+  }
+  
+  // localStorage'da bulunamazsa ACTIVE_KEYS'den kontrol et
+  const activeKeys = ACTIVE_KEYS.filter(k => k.bookId === bookId && k.isActive);
+  console.log('ACTIVE_KEYS for book:', activeKeys);
+  
+  if (activeKeys.length === 0) {
+    console.log('❌ No active keys for book');
     return false;
   }
   
-  // Key hash'ini hesapla ve karşılaştır
-  const inputHash = hashKey(cleanKey);
-  const isValid = inputHash === activeKey.keyHash;
+  // Hash'leri karşılaştır
+  const isValid = activeKeys.some(key => key.keyHash === inputHash);
   
-  console.log('Key verification:', { 
+  console.log('Key verification result:', { 
     inputKey: cleanKey, 
     inputHash: inputHash.substring(0, 16) + '...',
-    expectedHash: activeKey.keyHash.substring(0, 16) + '...',
+    expectedHashes: activeKeys.map(k => k.keyHash.substring(0, 16) + '...'),
     bookId, 
     isValid 
   });
+  console.log('=== END DEBUG ===');
   
   return isValid;
 };
@@ -149,6 +199,20 @@ export const createKeys = (bookId: string, count: number): BookKey[] => {
     });
   }
   return keys;
+};
+
+// Admin panelinde oluşturulan key'leri ACTIVE_KEYS'e ekle
+export const addKeyToActiveKeys = (key: BookKey): void => {
+  // ACTIVE_KEYS'e ekle
+  ACTIVE_KEYS.push(key);
+  
+  // localStorage'a da kaydet
+  if (typeof window !== 'undefined') {
+    const storedKeys = localStorage.getItem('bookKeys');
+    let keys = storedKeys ? JSON.parse(storedKeys) : [];
+    keys.push(key);
+    localStorage.setItem('bookKeys', JSON.stringify(keys));
+  }
 };
 
 // Excel export için key'leri hazırla

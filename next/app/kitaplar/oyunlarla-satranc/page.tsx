@@ -113,9 +113,9 @@ export default function OyunlarlaSatrancPage(){
                 type="text"
                 value={keyInput}
                 onChange={(e) => setKeyInput(e.target.value.toUpperCase())}
-                placeholder="XXXX-XXXX-XXXX"
+                placeholder="XXXX-XXXX-XXXX-XXXX"
                 className="key-input"
-                maxLength={14}
+                maxLength={19}
               />
               <button
                 onClick={handleKeyVerification}

@@ -21,6 +21,13 @@ export default function Books(){
           <p>Mekanik prensipleri eğlenceli deneylerle öğren!</p>
           <a className="cta" href="/kitaplar/benim-kucuk-deneylerim">Kitap Detayı</a>
         </article>
+        
+        <article className="card">
+          <img src="/img/Satrançta Taş Alışverişi.jpeg" alt="Satrançta Taş Alışverişi" style={{width: '100%', height: '150px', objectFit: 'cover', borderRadius: '8px', marginBottom: '1rem'}} />
+          <h3>Satrançta Taş Alışverişi</h3>
+          <p>Doğru taş alışverişi tekniklerini öğren ve satranç becerilerini geliştir!</p>
+          <a className="cta" href="/kitaplar/satrancta-tas-alisverisi">Kitap Detayı</a>
+        </article>
       </div>
     </>
   );

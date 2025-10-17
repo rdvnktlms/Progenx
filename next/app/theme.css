@@ -32,14 +32,16 @@ body::before {
   --board-light:#e6f4d6; --board-dark:#bfe2a6; --ring:rgba(205, 23, 25, 0.1); --radius:14px;
 }
 *{box-sizing:border-box} html,body{height:100%}
-body{margin:0;font-family:ui-sans-serif,system-ui,-apple-system,Segoe UI,Roboto,Arial,Noto Sans;background:var(--bg);color:var(--text)}
-.container{max-width:1100px;padding:20px;margin:0 auto}
+html,body{margin:0;padding:0;font-family:ui-sans-serif,system-ui,-apple-system,Segoe UI,Roboto,Arial,Noto Sans;background:var(--bg);color:var(--text);width:100%;overflow-x:hidden;max-width:100vw}
+*{box-sizing:border-box;max-width:100%}
+.container{max-width:1100px;padding:20px;margin:0 auto;width:100%;overflow-x:hidden}
 .site-header{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:14px}
 .brand{display:flex;align-items:center;gap:10px;text-decoration:none;color:inherit}
 .brand-logo{width:36px;height:36px;border-radius:50%;display:grid;place-items:center;overflow:hidden}
 .brand-icon{width:100%;height:100%;object-fit:cover;border-radius:50%}
 .brand h1{font-size:22px;margin:0}
 .nav{display:flex;align-items:center;gap:20px}
+.user-section{display:flex;align-items:center;gap:12px}
 .nav a{text-decoration:none;color:var(--text);padding:8px 16px;border-radius:10px;font-weight:500;transition:all 0.2s ease}
 .nav a:hover{background:var(--ring);transform:translateY(-1px)}
 
@@ -54,7 +56,7 @@ body{margin:0;font-family:ui-sans-serif,system-ui,-apple-system,Segoe UI,Roboto,
 .user-name{font-weight:600;font-size:14px;color:var(--text)}
 .user-status{font-size:12px;color:var(--muted)}
 .dropdown-arrow{font-size:10px;transition:transform 0.2s ease;margin-left:auto}
-.dropdown-menu{position:absolute;top:100%;right:0;background:white;border-radius:16px;box-shadow:0 12px 40px rgba(0,0,0,0.15);border:1px solid #e2e8f0;min-width:280px;opacity:0;visibility:hidden;transform:translateY(-10px);transition:all 0.3s ease;z-index:1000;margin-top:8px;overflow:hidden}
+.dropdown-menu{position:absolute;top:100%;right:0;background:white;border-radius:16px;box-shadow:0 12px 40px rgba(0,0,0,0.15);border:1px solid #e2e8f0;min-width:280px;opacity:1;visibility:visible;transform:translateY(0);transition:all 0.3s ease;z-index:1000;margin-top:8px;overflow:hidden}
 .dropdown-header{padding:20px;background:linear-gradient(135deg,#f8fafc,#e2e8f0);display:flex;align-items:center;gap:12px;border-bottom:1px solid #e2e8f0}
 .user-avatar-large{width:48px;height:48px;background:rgb(0, 118, 128);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:20px;color:white}
 .user-details{display:flex;flex-direction:column;gap:4px}
@@ -2987,6 +2989,91 @@ input:checked + .slider:before {
 }
 
 /* Admin Panel Styles */
+
+/* Satranç Alıştırması Oluşturma Stilleri */
+.chess-puzzle-creator {
+  background: #f8f9fa;
+  padding: 20px;
+  border-radius: 12px;
+  border: 1px solid #e9ecef;
+}
+
+.form-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
+  margin-bottom: 20px;
+}
+
+.chess-board-container {
+  display: flex;
+  gap: 30px;
+  margin-top: 30px;
+  align-items: flex-start;
+}
+
+.pieces-palette {
+  background: #f8f9fa;
+  padding: 20px;
+  border-radius: 12px;
+  border: 1px solid #dee2e6;
+  min-width: 200px;
+}
+
+.chess-board {
+  background: #f8f9fa;
+  padding: 20px;
+  border-radius: 12px;
+  border: 1px solid #dee2e6;
+}
+
+.puzzle-actions {
+  display: flex;
+  gap: 15px;
+  margin-top: 30px;
+}
+
+.generated-code {
+  margin-top: 30px;
+  background: #f8f9fa;
+  padding: 15px;
+  border-radius: 8px;
+  border: 1px solid #dee2e6;
+}
+
+.generated-code textarea {
+  width: 100%;
+  padding: 15px;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  font-family: 'Courier New', monospace;
+  font-size: 13px;
+  margin-top: 10px;
+  resize: vertical;
+  min-height: 250px;
+  background: #f8f9fa;
+}
+
+.generated-code textarea:focus {
+  outline: none;
+  border-color: #007bff;
+  box-shadow: 0 0 0 2px rgba(0, 123, 255, 0.25);
+}
+
+@media (max-width: 768px) {
+  .form-row {
+    grid-template-columns: 1fr;
+  }
+  
+  .chess-board-container {
+    flex-direction: column;
+    align-items: stretch;
+  }
+  
+  .pieces-palette {
+    min-width: auto;
+  }
+}
 .admin-login-container {
   min-height: 100vh;
   display: flex;
@@ -5000,6 +5087,245 @@ input:checked + .slider:before {
   .dropdown-menu {
     min-width: 250px;
     right: -20px;
+  }
+}
+
+/* Modern Mobile Navigation */
+.mobile-menu-btn {
+  display: none;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  width: 40px;
+  height: 40px;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  padding: 0;
+  z-index: 1001;
+}
+
+.hamburger-line {
+  width: 24px;
+  height: 3px;
+  background: var(--text);
+  margin: 2px 0;
+  transition: all 0.3s ease;
+  border-radius: 2px;
+}
+
+.hamburger-line.active:nth-child(1) {
+  transform: rotate(45deg) translate(5px, 5px);
+}
+
+.hamburger-line.active:nth-child(2) {
+  opacity: 0;
+}
+
+.hamburger-line.active:nth-child(3) {
+  transform: rotate(-45deg) translate(7px, -6px);
+}
+
+.mobile-nav-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: rgba(0, 0, 0, 0.5);
+  z-index: 1000;
+  display: flex;
+  justify-content: flex-end;
+}
+
+.mobile-nav {
+  width: 280px;
+  height: 100vh;
+  background: white;
+  box-shadow: -4px 0 20px rgba(0, 0, 0, 0.1);
+  overflow-y: auto;
+  animation: slideIn 0.3s ease;
+}
+
+@keyframes slideIn {
+  from {
+    transform: translateX(100%);
+  }
+  to {
+    transform: translateX(0);
+  }
+}
+
+.mobile-nav-content {
+  padding: 80px 20px 20px;
+}
+
+.mobile-nav-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 16px 0;
+  text-decoration: none;
+  color: var(--text);
+  border-bottom: 1px solid #f0f0f0;
+  transition: all 0.2s ease;
+  background: none;
+  border: none;
+  width: 100%;
+  text-align: left;
+  font-size: inherit;
+  font-family: inherit;
+}
+
+.mobile-nav-item:hover {
+  background: #f8f9fa;
+  padding-left: 8px;
+}
+
+.mobile-nav-item.logout {
+  color: #dc3545;
+}
+
+.mobile-nav-item.logout:hover {
+  background: #fef2f2;
+}
+
+.mobile-nav-icon {
+  font-size: 20px;
+  width: 24px;
+  text-align: center;
+}
+
+.mobile-nav-text {
+  flex: 1;
+  font-weight: 500;
+}
+
+.mobile-nav-badge {
+  background: linear-gradient(135deg, rgb(205, 23, 25), rgb(180, 20, 22));
+  color: white;
+  padding: 4px 8px;
+  border-radius: 12px;
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.mobile-user-info {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 20px 0;
+  margin-bottom: 20px;
+  border-bottom: 2px solid #e9ecef;
+}
+
+.mobile-user-avatar {
+  width: 48px;
+  height: 48px;
+  background: rgb(0, 118, 128);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 20px;
+  color: white;
+}
+
+.mobile-user-details {
+  flex: 1;
+}
+
+.mobile-user-name {
+  display: block;
+  font-weight: 600;
+  font-size: 16px;
+  color: var(--text);
+  margin-bottom: 4px;
+}
+
+.mobile-user-email {
+  display: block;
+  font-size: 13px;
+  color: var(--muted);
+}
+
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .container {
+    padding: 0;
+    max-width: 100vw;
+    width: 100vw;
+    overflow-x: hidden;
+  }
+  
+  .desktop-nav {
+    display: none;
+  }
+  
+  .mobile-menu-btn {
+    display: flex;
+  }
+  
+  .site-header {
+    justify-content: space-between;
+    align-items: center;
+    padding: 0 20px;
+    margin-bottom: 0;
+    max-width: 100vw;
+    overflow-x: hidden;
+  }
+  
+  .brand h1 {
+    font-size: 18px;
+  }
+  
+  /* Kitap kartları için tablet optimizasyonu */
+  .books-grid {
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)) !important;
+    gap: 15px !important;
+    padding: 0 15px !important;
+    max-width: 100vw;
+    overflow-x: hidden;
+  }
+  
+  /* Hero section mobil optimizasyonu */
+  section {
+    max-width: 100vw !important;
+    overflow-x: hidden !important;
+  }
+}
+
+@media (max-width: 480px) {
+  .mobile-nav {
+    width: 100%;
+  }
+  
+  .brand h1 {
+    font-size: 16px;
+  }
+  
+  /* Kitap kartları için mobil optimizasyonu */
+  .books-grid {
+    grid-template-columns: 1fr !important;
+    gap: 15px !important;
+    padding: 0 15px !important;
+    max-width: 100vw;
+    overflow-x: hidden;
+  }
+  
+  .book-card {
+    margin: 0 !important;
+    width: 100% !important;
+    max-width: 100% !important;
+  }
+  
+  /* Tüm section'lar için mobil kontrolü */
+  section {
+    max-width: 100vw !important;
+    overflow-x: hidden !important;
+    margin-left: 0 !important;
+    margin-right: 0 !important;
   }
 }
 

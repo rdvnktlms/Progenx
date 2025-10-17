@@ -98,6 +98,20 @@ export default function Page(){
       ageGroup: "7-12 Yaş",
       comingSoon: false
     },
+    {
+      id: 6,
+      title: "Satrançta Taş Alışverişi",
+      author: "Ozan ÇAPAN",
+      cover: "/img/Satrançta Taş Alışverişi.jpeg",
+      originalPrice: "₺162,00",
+      currentPrice: "₺129,60",
+      discount: "20%",
+      link: "/kitaplar/satrancta-tas-alisverisi",
+      buyLink: "https://odtuyayincilik.com.tr/cocuklar-icin-satrancta-tas-alisverisi-128?srsltid=AfmBOoptXn_SdOJcdSJnwit_sxb-bz3AoyTiDCJ-zpAYiQtOlA5eDpYo",
+      category: "Satranç",
+      ageGroup: "7-12 Yaş",
+      comingSoon: false
+    },
   ];
 
 
@@ -140,12 +154,14 @@ export default function Page(){
       <section style={{
         background: 'linear-gradient(135deg, rgb(205, 23, 25) 0%, rgb(180, 20, 22) 100%)',
         color: 'white',
-        padding: '80px 20px',
+        padding: '60px 20px',
         textAlign: 'center',
         position: 'relative',
         overflow: 'hidden',
         borderRadius: '24px',
-        margin: '20px'
+        margin: '20px',
+        maxWidth: 'calc(100vw - 40px)',
+        boxSizing: 'border-box'
       }}>
         <div style={{
           position: 'absolute',
@@ -187,9 +203,12 @@ export default function Page(){
       
       {/* Books Section */}
       <section style={{
-        padding: '60px 20px',
+        padding: '40px 20px',
         maxWidth: '1400px',
-        margin: '0 auto'
+        margin: '0 auto',
+        width: '100%',
+        boxSizing: 'border-box',
+        overflow: 'hidden'
       }}>
         <div style={{
           textAlign: 'center',
@@ -302,20 +321,27 @@ export default function Page(){
         </div>
         
         {/* Books Grid */}
-        <div style={{
+        <div className="books-grid" style={{
           display: 'grid',
-          gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))',
-          gap: '30px'
+          gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))',
+          gap: '20px',
+          padding: '0 10px',
+          width: '100%',
+          boxSizing: 'border-box',
+          overflow: 'hidden'
         }}>
           {filteredBooks.map(book => (
-            <div key={book.id} style={{
+            <div key={book.id} className="book-card" style={{
               background: 'white',
               borderRadius: '20px',
               overflow: 'hidden',
               boxShadow: '0 4px 6px rgba(0, 0, 0, 0.05)',
               border: '1px solid #e5e7eb',
               transition: 'all 0.3s ease',
-              position: 'relative'
+              position: 'relative',
+              width: '100%',
+              maxWidth: '100%',
+              boxSizing: 'border-box'
             }}
             onMouseOver={(e) => {
               e.currentTarget.style.transform = 'translateY(-8px)';
